@@ -1,0 +1,356 @@
+<header class="header no-print">
+    ﻿<div class="header-container bottom-shadow">
+
+        <div class="nav-icon float-l toggle-open" ng-click="open($event,'menu')">
+            <a href="#">
+                <span></span>
+                <span></span>
+                <span></span>
+            </a>
+        </div>
+
+
+        <a href="#" class="header-logo">
+            <img src="assets/images/uae-logo.png" />
+        </a>
+
+        <div class="control-panel float-r">
+
+            <div class="float-r control-panel-item settings">
+                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                <div class="settings-list">
+                    <ul>
+                        <li>
+                            <span>Dark Theme</span>
+                            <div class="zoom-toggle-container">
+                                <ul class="tg-list">
+                                    <li class="tg-list-item">
+                                        <input class="tgl tgl-flat" id="cb4" type="checkbox">
+                                        <label class="tgl-btn" for="cb4"></label>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="index-ar.html" class="arabic-text">العربية</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--<a class="float-r control-panel-item noti toggle-open" href="#" ng-click="open($event,'noti')">
+    <i class="fa fa-bell"></i>
+    <span class="noti-count">07</span>
+</a>-->
+            <a class="float-r control-panel-item filter filter-dept" data-open="department-panel-container" href="#">
+                <span class="selected-dept-image"><img src="assets/images/tasheel.png" /></span>
+                <i class="fa fa-angle-down"></i>
+                <div class="filter-panel-container department-panel-container toggle-open-target" data-open="department-panel-container">
+                    <div class="filter-dept-item" data-dept="tawteen" data-prefix="{{sd.prefix}}" data-selected="{{sd.selected}}"
+                        ng-repeat="sd in selectDepartment | orderBy:['-selected']" title="{{sd.title_en}}">
+                        <input type="radio" ng-click="updateSelected($event)" name="DepartmentFilterList" ng-value="sd"
+                            ng-model="filter.selctedDepartment" />
+                        <img src="assets/images/{{sd.img}}" />
+                    </div>
+                </div>
+            </a>
+
+
+
+
+            <a class="float-r control-panel-item filter toggle-open" data-open="filter-panel-container" ng-click="open($event,'emirates')"
+                href="#">
+                <span>Filter</span>
+                <i class="fa fa-plus"></i>
+            </a>
+            <!-- <a class="float-r control-panel-item printAllDashboard" title="print">
+                <i class="fa fa-print" aria-hidden="true"></i>
+            </a> -->
+            <section class="float-r control-panel-item printDropDown">
+                <a class="printAllDashboard" title="print">
+                    <i class="fa fa-print" aria-hidden="true"></i>
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </a>
+                <div>
+                    <!-- Datepicker as text field -->
+                    <div class="input-group date print-from">
+                        <input type="text" class="form-control" placeholder="From" ng-model="printDateFrom" init-date="printDateFrom" datepicker="">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                    </div>
+                    <div class="input-group date print-to">
+                        <input type="text" class="form-control" placeholder="To" ng-model="printDateTo" init-date="printDateTo" datepicker="">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                    </div>
+                    <a href="" ng-click="printPage()" class="gold-btn">ptint</a>
+
+                    <!-- <p ng-bind="filter.selctedDepartment.prefix"></p>
+                        <p ng-bind="filter.emirate.branchPrefix"></p>
+                        <p ng-bind="filter.branch.id"></p>
+                        <p ng-bind="printDateFrom"></p>  -->
+                </div>
+            </section>
+            <div class="float-r bubbles-bg">
+                <div class="float-r header-user">
+                    <div class="float-r header-user-img">
+                        <img src="assets/images/no-user.jpg" />
+                    </div>
+                    <span>hello, Dubai!</span>
+                    <a class="logout">
+                        <i class="fa fa-power-off"></i>
+                        logout
+                    </a>
+                </div>
+                <div class="float-r filter-items" ng-show="filter.department || filter.emirate">
+                    <div class="item filter-department-item" ng-show="filter.department.length != 0">
+                        <a class="close-item" ng-click="clearFilter('department');">
+                            <i class="fa fa-times-circle"></i>
+                        </a>
+                        <span ng-repeat="rd in filter.department" data-prefix="{{rd.prefix}}">
+                            {{rd.nameEN}}<i> - </i>
+                        </span>
+                    </div>
+                    <div class="item" ng-show="filter.emirate">
+                        <a class="close-item" ng-click="clearFilter('emirates');">
+                            <i class="fa fa-times-circle"></i>
+                        </a>
+                        {{filter.emirate.name}}
+                    </div>
+                    <div class="item" ng-show="filter.branch">
+                        <a class="close-item" ng-click="clearFilter('branches');">
+                            <i class="fa fa-times-circle"></i>
+                        </a>
+                        {{filter.branch.name}}
+                    </div>
+                    <div class="item" ng-show="filter.counter">
+                        <a class="close-item" ng-click="clearFilter('counters');">
+                            <i class="fa fa-times-circle"></i>
+                        </a>
+                        {{filter.counter.name}}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="filter-panel-container toggle-open-target" data-open="filter-panel-container">
+        <div class="filter-panel emirates departments">
+            <span class="main-title">Department Level</span>
+
+            <div class="filter-group">
+                <div class="loading message" ng-class="{error: department.dataMohre.error}" ng-show="department.dataMohre.error">
+                    <span>{{department.error}}</span>
+                </div>
+                <div class="loading" ng-hide="department.dataMohre">
+                    <span>loading</span>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+
+                <div class="filter-item" data-bg="{{dp.prefix}}" ng-hide="department.dataMohre.error" ng-repeat="dp in department.dataMohre"
+                    title="{{dp.nameEN}}">
+
+                    <!--<input type="radio" ng-click="loadEmirates(dp.prefix)" name="DepartmentList" ng-value="dp" ng-model="filter.department" />-->
+                    <input type="checkbox" checklist-model="filter.department" data-model="MOHRE" checklist-value="dp">
+                    <span>
+                        <label ng-hide="dp.prefix == 'MOHRE'">
+                            {{dp.nameEN}}
+                        </label>
+                        <img width="80%" ng-show="dp.prefix == 'MOHRE'" ng-src="assets/images/uae-gold-logo.png" />
+                        <img width="80%" ng-show="dp.prefix == 'MOHRE'" ng-src="assets/images/uae-logo.png" />
+
+                    </span>
+                    <!--<a class="close-item" ng-click="clearFilter('department',dp.nameEN);">
+            <i class="fa fa-times-circle"></i>
+        </a>-->
+                </div>
+
+                <div class="filter-item" title="All OTHERS" ng-show="department != null" data-length="{{department.dataMohre}}">
+
+                    <!--<input type="radio" ng-click="loadEmirates(dn.prefix)" name="DepartmentList" ng-value="dn" ng-model="filter.department" />-->
+                    <input type="checkbox" onchange="checkDepartments(event)" data-model="NONMOHRE" data-prefix="AllOTHERS">
+                    <span>
+                        <label ng-hide="dn.prefix == 'MOHRE'">
+                            All OTHERS
+                        </label>
+
+                    </span>
+                    <!--<a class="close-item" ng-click="clearFilter('department','NMOHRE');">
+    <i class="fa fa-times-circle"></i>
+</a>-->
+                </div>
+                <div class="filter-all-others">
+                    <div class="filter-item" data-bg="{{dn.prefix}}" ng-hide="department.dataNonMohre.error" ng-repeat="dn in department.dataNonMohre"
+                        title="{{dn.nameEN}}">
+
+                        <!--<input type="radio" ng-click="loadEmirates(dn.prefix)" name="DepartmentList" ng-value="dn" ng-model="filter.department" />-->
+
+                        <input type="checkbox" onchange="checkDepartments(event)" checklist-model="filter.department"
+                            data-model="NONMOHRE" data-prefix="{{dn.prefix}}" checklist-value="dn">
+                        <span>
+                            <label ng-hide="dn.prefix == 'MOHRE'">
+                                {{dn.nameEN}}
+                            </label>
+
+                        </span>
+                        <!--<a class="close-item" ng-click="clearFilter('department',dn.nameEN);">
+        <i class="fa fa-times-circle"></i>
+    </a>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="filter-panel emirates">
+            <span class="main-title">Emirates</span>
+
+            <div class="filter-group">
+                <div class="loading message" ng-class="{error: emirates.data.error}" ng-show="emirates.data.error">
+                    <span>{{emirates.error}}</span>
+                </div>
+                <div class="loading" ng-hide="emirates.data">
+                    <span>loading</span>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+
+                <div class="filter-item" data-bg="{{em.branchPrefix}}" ng-hide="emirates.data.error" ng-repeat="em in emirates.data"
+                    title="{{em.name}}">
+
+                    <input type="radio" ng-click="loadBranches(em.branchPrefix,$event)" name="EmiratesList" ng-value="em"
+                        ng-model="filter.emirate" />
+
+                    <span>
+                        <img ng-src="assets/images/{{em.branchPrefix}}-a.png" />
+                        <img ng-src="assets/images/{{em.branchPrefix}}-b.png" />
+                    </span>
+                    <a class="close-item" ng-click="clearFilter('emirates');">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
+                </div>
+
+                <!--<div class="filter-item" ng-hide="emirates.data.error" ng-click="filter.emirate=null;filter.branch=null;filter.counter=null;" title="All">
+
+        <span>
+            All
+        </span>
+    </div>-->
+
+            </div>
+        </div>
+
+
+        <div class="filter-panel branches">
+            <span class="main-title">Branches</span>
+            <div class="filter-group">
+                <div class="loading message" ng-class="{error: branches.data.error}">
+
+                    <span ng-show="!loadingBranches && branches == null">Select an Emirate</span>
+                    <span class="empty" ng-show="branches.data.length == 0">{{branches.empty}}</span>
+                    <span ng-show="loadingBranches && branches.data.error">{{branches.error}}</span>
+                </div>
+                <div class="loading" ng-show="loadingBranches && branches == null">
+                    <span>loading</span>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+                <div class="filter-item" ng-hide="branches.data.error" ng-repeat="br in branches.data" id="{{br.id}}">
+                    <input type="radio" name="BranchesList" ng-value="br" ng-model="filter.branch" ng-click="loadCounters(br.id,$event)" />
+                    <span>{{br.name}}</span>
+                    <a class="close-item" ng-click="clearFilter('branches');">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- <div class="filter-panel counters">
+            <span class="main-title">Counters</span>
+            <div class="filter-group">
+                <div class="loading message" ng-class="{error: counters.data.error}">
+                    <span ng-show="!loadingCounters && counters == null">Select a Branch</span>
+                    <span class="empty" ng-show="counters.data.length == 0">{{counters.empty}}</span>
+                    <span ng-show="loadingCounters && counters.data.error">{{counters.error}}</span>
+                </div>
+                <div class="loading" ng-show="loadingCounters && counters == null">
+                    <span>loading</span>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+                <div class="filter-item" ng-repeat="cr in counters.data" ng-hide="counters.data.error">
+                    <input type="radio" name="CounterssList" ng-value="cr" ng-model="filter.counter" />
+                    <span data-index="{{$index+1}}"></span>
+                    <a class="close-item" ng-click="clearFilter('counters');">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="filter-panel filter-action">
+            <input type="button" value="done" class="form-button" ng-click="getFiltered()" />
+        </div>
+    </div>
+
+    <div class="left-menu">
+        <span class="main-title">other services</span>
+        <div class="left-menu-items">
+            <ul>
+                <li>
+                    <a href="#/!">
+                        <span class="icon"></span>
+                        <span class="label">MOHRE</span>
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <span class="icon"></span>
+                        <span class="label">TAC serve</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#!notifications">
+                        <span class="icon"></span>
+                        <span class="label">Notifications</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#!fines">
+                        <span class="icon"></span>
+                        <span class="label">Violations</span>
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <span class="icon"></span>
+                        <span class="label">Dashboard 5</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="notification-menu">
+        <div class="noti-tabs">
+            <div class="tabs-legends">
+                <div class="legend"></div>
+                <div class="legend"></div>
+            </div>
+        </div>
+    </div>
+</header>

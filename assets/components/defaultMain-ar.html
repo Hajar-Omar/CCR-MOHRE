@@ -1,0 +1,2483 @@
+<section class="main" data-controller="MainController">
+  <div class="section-container">
+    <div class="pillar">
+      <div class="pile" data-popup="av-waiting">
+        <div class="pile-header">
+          <span class="main-title">متوسط زمن الانتظار</span>
+          <span class="sub-header">(بالدقائق)</span>
+
+          <div class="pile-action">
+            <a
+              class="pile-action-icon"
+              title="Maximize"
+              ng-click="openPile($event)"
+            >
+              <i class="fa fa-window-maximize" aria-hidden="true"></i>
+            </a>
+            <a
+              class="pile-action-icon refresh"
+              title="Refresh"
+              ng-click="loadWaitingTime($event)"
+            >
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </a>
+            <a
+              class="pile-action-icon status"
+              title="Violation Exists"
+              ng-show="waitingTime.status == 'true'"
+            >
+              <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="pile-content">
+          <div
+            id="power-gauge-waiting"
+            ng-hide="waitingTime.empty || waitingTime.error"
+            class="chart-gauge chart-avgWait"
+          ></div>
+          <div class="loading">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+          </div>
+          <div
+            class="chart-gauge-items"
+            ng-hide="waitingTime.empty || waitingTime.error"
+          >
+            <div class="item">
+              <i class="gauge-class0"></i>
+              منخفض
+            </div>
+            <div class="item">
+              <i class="gauge-class1"></i>
+              متوسط
+            </div>
+            <div class="item">
+              <i class="gauge-class2"></i>
+              عالي
+            </div>
+          </div>
+
+          <div
+            class="feedback-messages"
+            ng-show="waitingTime.empty || waitingTime.error"
+            ng-class="{error: waitingTime.error}"
+          >
+            <span class="empty" ng-show="waitingTime.empty"
+              >لا توجد بيانات!</span
+            >
+            <span ng-show="waitingTime.error">خطأ في الخادم الداخلي!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pillar">
+      <div class="pile mid-pile" data-popup="salaries">
+        <div class="pile-header">
+          <span class="main-title">الرواتب</span>
+
+          <div class="pile-action">
+            <a class="pile-action-icon" title="Maximize">
+              <i class="fa fa-window-maximize" aria-hidden="true" ng-click="openPile($event)"></i>
+            </a>
+            <a
+              class="pile-action-icon refresh"
+              title="Refresh"
+              ng-click="loadSalaries($event)"
+            >
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="pile-content">
+          <div class="d-flex chart-gauge salaries">
+            <div class="dw-50">
+              <div>
+                <img src="assets/images/building-icon.png" alt="" />
+                <span class="num-lg">{{ salaries.data[0].count }}</span>
+              </div>
+              <span class="sal-percntg">عدد المراكز</span>
+            </div>
+            <div class="dw-50">
+              <span class="valor-nivel"
+                >{{ salaries.data[0].percentage }}%</span
+              >
+              <div class="barra">
+                <div class="barra-nivel"></div>
+              </div>
+              <span class="sal-percntg">نسبة الإلتزام بالمرتبات</span>
+            </div>
+          </div>
+          <div class="loading">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+          </div>
+          <div
+            class="feedback-messages"
+            ng-show="salaries.empty || salaries.error"
+            ng-class="{error: salaries.error}"
+          >
+            <span class="empty" ng-show="salaries.empty">لا توجد بيانات!</span>
+            <span ng-show="salaries.error">خطأ في الخادم الداخلي!</span>
+          </div>
+        </div>
+      </div>
+      <div class="pile mid-pile" data-popup="employees">
+        <div class="pile-header">
+          <span class="main-title">الموارد البشرية</span>
+
+          <div class="pile-action">
+            <a class="pile-action-icon" title="Maximize">
+              <i class="fa fa-window-maximize" aria-hidden="true" ng-click="openPile($event)"></i>
+            </a>
+            <a
+              class="pile-action-icon refresh"
+              title="Refresh"
+              ng-click="loadEmployeesSalaries($event)"
+            >
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+        <div class="pile-content">
+          <div class="chart-gauge salaries">
+            <div class="soildGauge-chart-contnr">
+              <span>{{ employeesSalaries.data[1].percentage }}%</span>
+              <solid-gauge
+                id="soildGauge"
+                color="#5fb8e6"
+                name="{{ employeesSalaries.data[1].nationalityNameAr }}"
+                ng-if="employeesSalaries.data[1].percentage"
+                y="{{ employeesSalaries.data[1].percentage }}"
+              ></solid-gauge>
+              <img src="assets/images/solidGaugeChart-icon1.png" />
+              <span>{{ employeesSalaries.data[1].nationalityNameAr }}</span>
+            </div>
+            <div class="soildGauge-chart-contnr">
+              <span>{{ employeesSalaries.data[3].percentage }}%</span>
+              <solid-gauge
+                id="soildGauge-two"
+                color="#fc6a37"
+                name="{{ employeesSalaries.data[3].nationalityNameAr }}"
+                ng-if="employeesSalaries.data[3].percentage"
+                y="{{ employeesSalaries.data[3].percentage }}"
+              ></solid-gauge>
+              <img src="assets/images/solidGaugeChart-icon2.png" />
+              <span>{{ employeesSalaries.data[3].nationalityNameAr }}</span>
+            </div>
+            <div class="soildGauge-chart-contnr">
+              <span>{{ employeesSalaries.data[2].percentage }}%</span>
+              <solid-gauge
+                id="soildGauge-three"
+                color="#f0cb69"
+                name="{{ employeesSalaries.data[2].nationalityNameAr }}"
+                ng-if="employeesSalaries.data[2].percentage"
+                y="{{ employeesSalaries.data[2].percentage }}"
+              ></solid-gauge>
+              <img src="assets/images/solidGaugeChart-icon3.png" />
+              <span>{{ employeesSalaries.data[2].nationalityNameAr }}</span>
+            </div>
+            <div class="soildGauge-chart-contnr">
+              <span>{{ employeesSalaries.data[0].percentage }}%</span>
+              <solid-gauge
+                id="soildGauge-four"
+                color="#8ec2a7"
+                name="{{ employeesSalaries.data[0].nationalityNameAr }}"
+                ng-if="employeesSalaries.data[0].percentage"
+                y="{{ employeesSalaries.data[0].percentage }}"
+              ></solid-gauge>
+              <img src="assets/images/solidGaugeChart-icon4.png" />
+              <span>{{ employeesSalaries.data[0].nationalityNameAr }}</span>
+            </div>
+          </div>
+          <div class="loading">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+          </div>
+          <div
+            class="feedback-messages"
+            ng-show="employeesSalaries.empty || employeesSalaries.error"
+            ng-class="{error: employeesSalaries.error}"
+          >
+            <span class="empty" ng-show="employeesSalaries.empty"
+              >لا توجد بيانات!</span
+            >
+            <span ng-show="employeesSalaries.error"
+              >خطأ في الخادم الداخلي!</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="pillar pillar-summary print-expand summary-pillar">
+<div class="pile" data-popup="branch-summary">
+    <div class="pile-header">
+        <span class="main-title">تفاصيل الفرع</span>
+
+        <div class="pile-action">
+            <a class="pile-action-icon" title="Maximize" ng-click="openPile($event)">
+                <i class="fa fa-window-maximize" aria-hidden="true"></i>
+            </a>
+            <a class="pile-action-icon refresh" title="Refresh" ng-click="loadBranchSummary($event)">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+            </a>
+
+        </div>
+    </div>
+
+    <div class="pile-content">
+
+        <div class="chart-gauge chart-summary">
+            <div class="summary-scroll summary-scroll1" ng-hide="barSummary.empty || barSummary.error">
+                <table class="grid-table">
+                    <thead>
+                        <tr>
+                            <th>{{Btitle.ar}}</th>
+                            <th>تم خدمتهم</th>
+                            <th ng-hide="cou_d == false">الحاله</th>
+                            <th ng-show="cou_d == false">الانتظار</th>
+                            <th ng-show="cou_d == false">WTT</th>
+                            <th ng-show="cou_d == false">TRT</th>
+                            <th ng-show="cou_d == false">مفتوح</th>
+                        </tr>
+                    </thead>
+                    <tbody> -->
+    <!--<tr ng-repeat="bs in barSummaryData | orderBy:'-wtt' | emptyToEnd:'wtt'">-->
+    <!-- <tr ng-repeat="bs in barSummaryData | orderBy:['!avgwtt','-avgwtt']">
+                            <td ng-show="cou_d == false">{{bs.description}}</td>
+                            <td ng-hide="cou_d == false">{{bs.counter}}</td>
+                            <td ng-show="cou_d == false">{{bs.served}}</td>
+                            <td ng-show="cou_d == false">{{bs.waitting}}</td>
+                            <td ng-show="cou_d == false">
+
+                                <div class="summary-progress summary-progress-w" data-val="{{bs.avgwtt}}">
+                                    <div class="bar"></div>
+                                    <span>{{bs.avgwtt}} د</span>
+                                </div>
+
+                            </td>
+                            <td ng-show="cou_d == false">
+
+                                <div class="summary-progress summary-progress-t" data-val="{{bs.avgtrt}}">
+                                    <div class="bar"></div>
+                                    <span>{{bs.avgtrt}} د</span>
+                                </div>
+                            </td>
+                            <td ng-show="cou_d == false">{{bs.open}}/{{bs.closed}}</td>
+                            <td ng-hide="cou_d == false">{{bs.customersServed}}</td>
+                            <td ng-hide="cou_d == false">
+                                <span ng-class="bs.status == 'OPEN' ? 'open-status' : 'close-status'" class="status-circle"
+                                    title="{{bs.status}}"></span>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+
+        <div class="loading">
+
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+        </div>
+
+        <div class="feedback-messages" ng-show="barSummary.empty || customerStatus.error" ng-class="{error: barSummary.error}">
+
+            <span class="empty" ng-show="barSummary.empty">لا توجد بيانات!</span>
+            <span ng-show="barSummary.error">خطأ في الخادم الداخلي!</span>
+        </div>
+    </div>
+</div>
+</div> -->
+
+    <div class="pillar">
+      <div class="pile" data-popup="av-transaction">
+        <div class="pile-header">
+          <span class="main-title">متوسط زمن الخدمة</span>
+          <span class="sub-header">(بالدقائق)</span>
+
+          <div class="pile-action">
+            <a
+              class="pile-action-icon"
+              title="Maximize"
+              ng-click="openPile($event)"
+            >
+              <i class="fa fa-window-maximize" aria-hidden="true"></i>
+            </a>
+            <a
+              class="pile-action-icon refresh"
+              title="Refresh"
+              ng-click="loadTransactionTime($event)"
+            >
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </a>
+            <a
+              class="pile-action-icon status"
+              title="Violation Exists"
+              ng-show="transactionTime.status == 'true'"
+            >
+              <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="pile-content">
+          <div
+            id="power-gauge-transaction"
+            ng-hide="transactionTime.empty || transactionTime.error"
+            class="chart-gauge chart-trans"
+          ></div>
+          <div class="loading">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+          </div>
+          <div
+            class="chart-gauge-items"
+            ng-hide="transactionTime.empty || transactionTime.error"
+          >
+            <div class="item">
+              <i class="gauge-class0"></i>
+              منخفض
+            </div>
+            <div class="item">
+              <i class="gauge-class1"></i>
+              متوسط
+            </div>
+            <div class="item">
+              <i class="gauge-class2"></i>
+              عالي
+            </div>
+          </div>
+
+          <div
+            class="feedback-messages"
+            ng-show="transactionTime.empty || transactionTime.error"
+            ng-class="{error: transactionTime.error}"
+          >
+            <span class="empty" ng-show="transactionTime.empty"
+              >لا توجد بيانات!</span
+            >
+            <span ng-show="transactionTime.error">خطأ في الخادم الداخلي!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pillar">
+      <div class="pile" data-popup="served-hour">
+        <div class="pile-header">
+          <span class="main-title">تم خدمتهم حسب الوقت (ساعات الذروة)</span>
+          <div class="pile-action">
+            <a
+              class="pile-action-icon"
+              title="Maximize"
+              ng-click="openPile($event)"
+            >
+              <i class="fa fa-window-maximize" aria-hidden="true"></i>
+            </a>
+            <a
+              class="pile-action-icon refresh"
+              title="Refresh"
+              ng-click="loadTransactionsPerHour($event);loadTransactionsPerHourDetails($event)"
+            >
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="pile-content">
+          <div class="chart-line-legends">
+            <div class="item">
+              <i class="line-legend line-class0"></i>
+              تم خدمتهم
+            </div>
+            <div class="item">
+              <i class="line-legend line-class1"></i>
+              تم دخولهم
+            </div>
+          </div>
+          <div class="chart-gauge chart-line">
+            <line-chart
+              lay="lineConfig.lay"
+              ng-hide="lineCharts.empty || lineCharts.error"
+              tex="lineConfig.tex"
+              col="lineConfig.col"
+              data="lc"
+              ng-repeat="lc in lineCharts.data"
+            ></line-chart>
+          </div>
+
+          <div class="loading">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+          </div>
+          <div class="chart-line-items selection-period">
+            <div
+              class="item"
+              ng-repeat="sp in ServedPeriod"
+              ng-click="loadTransactionsPerHour($event);loadTransactionsPerHourDetails($event)"
+            >
+              <input
+                type="radio"
+                name="ServedPerHour"
+                ng-value="sp.en"
+                ng-model="lineCartConfig.duration"
+              />
+              <span>{{ sp.ar }}</span>
+            </div>
+          </div>
+
+          <div
+            class="feedback-messages"
+            ng-show="lineCharts.empty || lineCharts.error"
+            ng-class="{error: lineCharts.error}"
+          >
+            <span class="empty" ng-show="lineCharts.empty"
+              >لا توجد بيانات!</span
+            >
+            <span ng-show="lineCharts.error">خطأ في الخادم الداخلي!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pillar print-expand">
+      <div class="pile" data-popup="happiness">
+        <div class="pile-header">
+          <span class="main-title">مؤشر السعادة</span>
+
+          <div class="pile-action">
+            <a
+              class="pile-action-icon"
+              title="Maximize"
+              ng-click="openPile($event)"
+            >
+              <i class="fa fa-window-maximize" aria-hidden="true"></i>
+            </a>
+            <a
+              class="pile-action-icon refresh"
+              title="Refresh"
+              ng-click="loadHappinessRank();loadHappinessScore();loadHappinessStatus()"
+            >
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="pile-content">
+          <div class="chart-line-items selection-period">
+            <div
+              class="item"
+              ng-repeat="sp in happinessDuration"
+              ng-click="loadHappinessScore($event);loadHappinessStatus($event);loadHappinessRank($event)"
+            >
+              <input
+                type="radio"
+                name="happinessduration"
+                ng-value="sp.en"
+                ng-model="happinessconfig.duration"
+              />
+              <span>{{ sp.ar }}</span>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+          <div
+            class="chart-gauge chart-happiness happiness-indicator"
+            data-max="100"
+          >
+            <div class="final-indicator-icon">
+              <div class="stats-img ind-sad"></div>
+              <div class="stats-count">
+                <span>نسبة سعادة المتعاملين</span>
+                <div class="round-number">
+                  <span>{{ happinessScore.avg | number: 2 }}</span>
+                  <span>%</span>
+                </div>
+              </div>
+            </div>
+            <div class="final-indicator-count">
+              <div class="count-tem">
+                <img src="assets/images/ind-pad.png" />
+                <div class="count-tem-details">
+                  <span>الأجهزة الفعالة</span>
+                  <span
+                    class="stats-number"
+                    data-from="0"
+                    data-to="{{ happinessStatus.active }}"
+                    >{{ happinessStatus.active }}</span
+                  >
+                </div>
+              </div>
+              <div class="count-tem">
+                <img src="assets/images/ind-pad-off.png" />
+                <div class="count-tem-details">
+                  <span>الأجهزة الغير فعالة</span>
+                  <span
+                    class="stats-inactive"
+                    data-from="0"
+                    data-to="{{ happinessStatus.inactive }}"
+                    >{{ happinessStatus.inactive }}</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <!-- <div class="happiness-scroll">
+
+                <section class="oneProgress sad" ng-repeat="hk in happinessRank.data | unique : 'happiness' | orderBy : '-happiness'">
+
+                    <div class="progress skill-bar" ng-if="hk">
+                        <span>{{hk.nameArabic}}</span>
+                        <div class="stats">
+                            <div class="stats-img ind-sad">
+                            </div>
+                            <div class="stats-number money" data-from="0" data-to="{{hk.happiness}}">{{hk.happiness}}</div>
+                        </div>
+                    </div>
+
+                </section>
+            </div> -->
+          </div>
+          <div class="loading">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+          </div>
+
+          <div
+            class="feedback-messages"
+            ng-show="happinessRank.empty || happinessRank.error"
+            ng-class="{error: happinessRank.error}"
+          >
+            <span class="empty" ng-show="happinessRank.empty"
+              >لا يوجد بيانات!</span
+            >
+            <span ng-show="happinessRank.error">Internal Server Error!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pillar">
+      <div class="pile" data-popup="served-branch">
+        <div class="pile-header">
+          <span class="main-title"
+            >تم خدمتهم
+            <span>{{ servdPerPlaceAR }}</span>
+          </span>
+
+          <div class="pile-action">
+            <a
+              class="pile-action-icon"
+              title="Maximize"
+              ng-click="openPile($event)"
+            >
+              <i class="fa fa-window-maximize" aria-hidden="true"></i>
+            </a>
+            <a
+              class="pile-action-icon refresh"
+              title="Refresh"
+              ng-click="loadServedPerBranch($event)"
+            >
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="pile-content bar-li-content">
+          <div class="chart-gauge chart-bar">
+            <bar-chart
+              lay="1"
+              data="lc"
+              ng-hide="barSCharts.empty || barSCharts.error"
+              ng-repeat="lc in servedCharts"
+              id="chartBar1"
+            ></bar-chart>
+          </div>
+          <div class="loading">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+          </div>
+          <div class="chart-line-items selection-period">
+            <div
+              class="item"
+              ng-repeat="sp in ServedPeriod"
+              ng-click="loadServedPerBranch($event);loadOperationalSummaryC($event)"
+            >
+              <input
+                type="radio"
+                name="ServedPerBranch"
+                ng-value="sp.en"
+                ng-model="barChartConfig.duration"
+              />
+              <span>{{ sp.ar }}</span>
+            </div>
+          </div>
+
+          <div
+            class="feedback-messages"
+            ng-show="barSCharts.empty || barSCharts.error"
+            ng-class="{error: barSCharts.error}"
+          >
+            <span class="empty" ng-show="barSCharts.empty"
+              >لا توجد بيانات!</span
+            >
+            <span ng-show="barSCharts.error">خطأ في الخادم الداخلي!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pillar">
+      <div class="pile mid-pile" data-popup="counter-status">
+        <div class="pile-header">
+          <span class="main-title">حالة منافذ الخدمة</span>
+
+          <div class="pile-action">
+            <a
+              class="pile-action-icon"
+              title="Maximize"
+              ng-click="openPile($event)"
+            >
+              <i class="fa fa-window-maximize" aria-hidden="true"></i>
+            </a>
+            <a
+              class="pile-action-icon refresh"
+              title="Refresh"
+              ng-click="loadCounterStatus($event)"
+            >
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="pile-content">
+          <div class="chart-gauge chart-donut">
+            <donut-chart
+              data="dc"
+              ng-hide="counterStatus.empty || counterStatus.error"
+              ng-repeat="dc in donutCharts.data"
+            ></donut-chart>
+          </div>
+          <div class="loading">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+          </div>
+          <div
+            class="chart-gauge-items chart-donut-items"
+            ng-hide="counterStatus.empty || counterStatus.error"
+          >
+            <div class="item">
+              <i class="donut-class1"></i>
+              مفتوح
+              <b>({{ donutCharts.open }})</b>
+            </div>
+            <div class="item">
+              <i class="donut-class0"></i>
+              مغلق
+              <b>({{ donutCharts.closed }})</b>
+            </div>
+          </div>
+
+          <div
+            class="feedback-messages"
+            ng-show="counterStatus.empty || counterStatus.error"
+            ng-class="{error: counterStatus.error}"
+          >
+            <span class="empty" ng-show="counterStatus.empty"
+              >لا توجد بيانات!</span
+            >
+            <span ng-show="counterStatus.error">خطأ في الخادم الداخلي!</span>
+          </div>
+        </div>
+      </div>
+      <div class="pile mid-pile" data-popup="customer-status">
+        <div class="pile-header">
+          <span class="main-title">حالة المتعاملين</span>
+
+          <div class="pile-action">
+            <a
+              class="pile-action-icon"
+              title="Maximize"
+              ng-click="openPile($event)"
+            >
+              <i class="fa fa-window-maximize" aria-hidden="true"></i>
+            </a>
+            <a
+              class="pile-action-icon refresh"
+              title="Refresh"
+              ng-click="loadCustomerStatus($event)"
+            >
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="pile-content">
+          <div class="chart-gauge chart-donut chart-pie">
+            <pie-chart
+              lay="lay"
+              data="pc"
+              ng-hide="customerStatus.empty || customerStatus.error"
+              ng-repeat="pc in pieCharts.data"
+            ></pie-chart>
+          </div>
+          <div class="loading">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+          </div>
+          <div
+            class="chart-gauge-items chart-donut-items chart-pie-items"
+            ng-hide="customerStatus.empty || customerStatus.error"
+          >
+            <div class="item">
+              <i class="pie-class0"></i>
+              تم خدمتهم
+              <b>({{ pieCharts.total }})</b>
+            </div>
+            <div class="item">
+              <i class="pie-class1"></i>
+              منتظرين
+              <b>({{ pieCharts.waiting }})</b>
+            </div>
+            <div class="item">
+              <i class="pie-class2"></i>
+              لم يظهروا
+              <b>({{ pieCharts.noShow }})</b>
+            </div>
+          </div>
+
+          <div
+            class="feedback-messages"
+            ng-show="customerStatus.empty || customerStatus.error"
+            ng-class="{error: customerStatus.error}"
+          >
+            <span class="empty" ng-show="customerStatus.empty"
+              >لا توجد بيانات!</span
+            >
+            <span ng-show="customerStatus.error">خطأ في الخادم الداخلي!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pillar dept-pillar">
+      <div class="pile" data-popup="served-detpt">
+        <div class="pile-header">
+          <span class="main-title">تم خدمتهم حسب القسم</span>
+
+          <div class="pile-action">
+            <a
+              class="pile-action-icon"
+              title="Maximize"
+              ng-click="openPile($event)"
+            >
+              <i class="fa fa-window-maximize" aria-hidden="true"></i>
+            </a>
+            <a
+              class="pile-action-icon refresh"
+              title="Refresh"
+              ng-click="loadServedPerDepartment($event)"
+            >
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="pile-content bar-li-content">
+          <div class="chart-gauge chart-dept">
+            <bar-chart
+              data="lc"
+              ng-repeat="lc in servedDeptCharts.data"
+              ng-hide="servedDeptCharts.empty || servedDeptCharts.error"
+              id="chartBar2"
+            ></bar-chart>
+          </div>
+          <div class="loading">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+          </div>
+          <div class="chart-line-items selection-period">
+            <div
+              class="item"
+              ng-repeat="sp in DepartmentPeriod"
+              ng-click="loadServedPerDepartment($event);loadServedPerDepartmentDetails($event)"
+            >
+              <input
+                type="radio"
+                name="ServedPerDept"
+                ng-value="sp.en"
+                ng-model="barChartDConfig.duration"
+              />
+              <span>{{ sp.ar }}</span>
+            </div>
+          </div>
+          <div
+            class="feedback-messages"
+            ng-show="servedDeptCharts.empty || servedDeptCharts.error"
+            ng-class="{error: servedDeptCharts.error}"
+          >
+            <span class="empty" ng-show="servedDeptCharts.empty"
+              >لا توجد بيانات!</span
+            >
+            <span ng-show="servedDeptCharts.error">خطأ في الخادم الداخلي!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-container pile-popup">
+    <a class="back-popup">
+      <img src="assets/images/back.png" />
+    </a>
+    <div class="popup-pillar" data-popup="av-waiting">
+      <div class="breadCrumbs">
+        <label
+          ng-if="!filter.emirate"
+          ng-click="loadWaitingTime($event);loadOperationalSummaryQ($event);resetdrill();"
+          >كل الإمارات</label
+        >
+        <label
+          ng-if="embr.emName"
+          ng-click="loadWaitingTime($event , embr.emirate);loadOperationalSummaryQ($event , embr.emirate );resetdrillBranch();"
+          >{{ embr.emName }}</label
+        >
+        <label ng-if="embr.brName">{{ embr.brName }}</label>
+      </div>
+      <div class="pillar">
+        <div class="pile">
+          <div class="pile-header">
+            <span class="main-title">متوسط زمن الانتظار</span>
+            <span class="sub-header">(بالدقائق)</span>
+
+            <div class="pile-action">
+              <a
+                class="pile-action-icon refresh"
+                title="Refresh"
+                ng-click="loadWaitingTime($event);loadOperationalSummaryQ($event , embr.emirate , embr.branch)"
+              >
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+              </a>
+              <a class="pile-action-icon print" title="print">
+                <i class="fa fa-print" aria-hidden="true"></i>
+              </a>
+              <a
+                class="pile-action-icon export"
+                ng-click="export($event , barOperationalDataQ)"
+                title="Export to Excel"
+              >
+                <i class="fa fa-paperclip" aria-hidden="true"></i>
+              </a>
+              <!--<a class="pile-action-icon status" ng-show="waitingTime.status == 'true'" title="Violation Exists">
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                </a>-->
+            </div>
+          </div>
+
+          <div class="pile-content">
+            <div
+              id="power-gauge-waiting2"
+              ng-hide="waitingTime.empty || waitingTime.error"
+              class="chart-gauge chart-avgWait"
+            ></div>
+            <div class="loading">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+            <div
+              class="chart-gauge-items"
+              ng-hide="waitingTime.empty || waitingTime.error"
+            >
+              <div class="item">
+                <i class="gauge-class0"></i>
+                منخفض
+              </div>
+              <div class="item">
+                <i class="gauge-class1"></i>
+                متوسط
+              </div>
+              <div class="item">
+                <i class="gauge-class2"></i>
+                عالي
+              </div>
+            </div>
+
+            <div
+              class="feedback-messages"
+              ng-show="waitingTime.empty || waitingTime.error"
+              ng-class="{error: waitingTime.error}"
+            >
+              <span class="empty" ng-show="waitingTime.empty"
+                >لا توجد بيانات!</span
+              >
+              <span ng-show="waitingTime.error">خطأ في الخادم الداخلي!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="popup-scroll">
+        <div class="summary-scroll summary-operational-q">
+          <div class="table-wrapper">
+            <div class="loading" ng-show="barOperationalDataQ.length == 0">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+            <table class="grid-table">
+              <tr>
+                <th>{{ Qtitle.ar }}</th>
+                <th></th>
+                <th>WTT</th>
+                <th>TRT</th>
+                <th ng-show="inbr == false">تم خدمتهم</th>
+                <th ng-show="inbr == false">عملاء منتظرين</th>
+                <th ng-show="inbr == false">ليس هناك عرض</th>
+                <th ng-show="inbr == false">مفتوح</th>
+                <th ng-show="inbr == false">مغلق</th>
+                <th ng-show="inbr == true">فرع</th>
+                <th ng-show="inbr == true">عملاء تم خدمتهم</th>
+                <th ng-show="inbr == true">عملاء منتظرين</th>
+                <th ng-show="inbr == true">الوقت المتوقع للإنتظار</th>
+                <th ng-show="inbr == true">مفتوح</th>
+              </tr>
+
+              <tbody>
+                <!--<tr ng-repeat="bs in barSummaryData | orderBy:'-wtt' | emptyToEnd:'wtt'">-->
+                <tr
+                  ng-repeat="bs in barOperationalDataQ | orderBy:['!avgwtt','-avgwtt']"
+                >
+                  <td>
+                    <a
+                      href="#"
+                      ng-model="embr"
+                      ng-click="filterOperational('Q',$event);loadWaitingTime($event , embr.emirate , embr.branch);"
+                      data-branchID="{{ bs.id }}"
+                      data-emirateID="{{ bs.emiratePrefix }}"
+                      >{{ bs.description }}</a
+                    >
+                  </td>
+                  <td>
+                    <i
+                      class="fa fa-exclamation-triangle violation-alert"
+                      aria-hidden="true"
+                      ng-show="bs.statusWtt == 'true'"
+                      title="Violation Exists"
+                    ></i>
+                  </td>
+                  <td>
+                    <div
+                      class="summary-progress summary-progress-w"
+                      data-val="{{ bs.name ? bs.avgwtt : 0 }}"
+                    >
+                      <div class="bar"></div>
+                      <span
+                        >{{ bs.name ? (bs.avgwtt | number: 0) : 0 }} دقيقة</span
+                      >
+                    </div>
+                  </td>
+                  <td>
+                    <div
+                      class="summary-progress summary-progress-t"
+                      data-val="{{ bs.name ? bs.avgtrt : 0 }}"
+                    >
+                      <div class="bar"></div>
+                      <span
+                        >{{ bs.name ? (bs.avgtrt | number: 0) : 0 }} دقيقة</span
+                      >
+                    </div>
+                  </td>
+                  <td ng-show="inbr == false">{{ bs.served }}</td>
+                  <td ng-show="inbr == false">{{ bs.waitting }}</td>
+                  <td ng-show="inbr == false">{{ bs.noShow }}</td>
+                  <td ng-show="inbr == false">{{ bs.open }}</td>
+                  <td ng-show="inbr == false">{{ bs.closed }}</td>
+                  <td ng-show="inbr == true">{{ bs.branchName }}</td>
+                  <td ng-show="inbr == true">{{ bs.customersServed }}</td>
+                  <td ng-show="inbr == true">{{ bs.customersWaiting }}</td>
+                  <td ng-show="inbr == true">{{ bs.estimatedWaitingTime }}</td>
+                  <td ng-show="inbr == true">{{ bs.openServicePoints }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-pillar" data-popup="served-hour">
+      <div class="breadCrumbs">
+        <label
+          ng-if="!filter.emirate"
+          ng-click="loadTransactionsPerHour($event);loadTransactionsPerHourDetails($event);resetdrill();"
+          >كل الإمارات</label
+        >
+        <label
+          ng-if="embr.emName"
+          ng-click="loadTransactionsPerHour($event , embr.emirate);loadTransactionsPerHourDetails($event , embr.emirate );resetdrillBranch();"
+          >{{ embr.emName }}</label
+        >
+        <label ng-if="embr.brName">{{ embr.brName }}</label>
+      </div>
+      <div class="pillar">
+        <div class="pile">
+          <div class="pile-header">
+            <span class="main-title">تم خدمتهم حسب الساعه</span>
+            <div class="pile-action">
+              <a
+                class="pile-action-icon refresh"
+                ng-click="loadTransactionsPerHour($event , embr.emirate , embr.branch);loadTransactionsPerHourDetails($event , embr.emirate , embr.branch)"
+              >
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+              </a>
+              <a class="pile-action-icon print" title="print">
+                <i class="fa fa-print" aria-hidden="true"></i>
+              </a>
+              <a
+                class="pile-action-icon export"
+                ng-click="export($event , TransPerHourTable.data)"
+                title="Export to Excel"
+              >
+                <i class="fa fa-paperclip" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="pile-content">
+            <div class="chart-line-legends">
+              <div class="item">
+                <i class="line-legend line-class0"></i>
+                تم خدمتهم
+              </div>
+              <div class="item">
+                <i class="line-legend line-class1"></i>
+                تم دخولهم
+              </div>
+            </div>
+            <div class="chart-gauge chart-line">
+              <line-chart
+                lay="lineConfig.lay"
+                ng-hide="lineCharts.empty || lineCharts.error"
+                tex="lineConfig.tex"
+                col="lineConfig.col"
+                data="lc"
+                ng-repeat="lc in lineCharts.data"
+              ></line-chart>
+            </div>
+            <div class="loading">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+            <div class="chart-line-items selection-period">
+              <div
+                class="item"
+                ng-repeat="sp in ServedPeriod"
+                ng-click="loadTransactionsPerHour($event , embr.emirate , embr.branch);loadTransactionsPerHourDetails($event , embr.emirate , embr.branch)"
+              >
+                <input
+                  type="radio"
+                  name="ServedPerHourPP"
+                  ng-value="sp.en"
+                  ng-model="lineCartConfig.duration"
+                />
+                <span>{{ sp.ar }}</span>
+              </div>
+            </div>
+
+            <div
+              class="feedback-messages"
+              ng-show="lineCharts.empty || lineCharts.error"
+              ng-class="{error: lineCharts.error}"
+            >
+              <span class="empty" ng-show="lineCharts.empty"
+                >لا توجد بيانات!</span
+              >
+              <span ng-show="lineCharts.error">خطأ في الخادم الداخلي!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="popup-scroll">
+        <div class="summary-scroll summary-scroll-details">
+          <div class="table-wrapper">
+            <div class="loading" ng-show="TransPerHourTable.length == 0">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+
+            <div id="myID"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-pillar" data-popup="av-transaction">
+      <div class="breadCrumbs">
+        <label
+          ng-if="!filter.emirate"
+          ng-click="loadTransactionTime($event);loadOperationalSummaryC($event);resetdrill();"
+          >كل الإمارات</label
+        >
+        <label
+          ng-if="embr.emName"
+          ng-click="loadTransactionTime($event , embr.emirate);loadOperationalSummaryC($event , embr.emirate );resetdrillBranch();"
+          >{{ embr.emName }}</label
+        >
+        <label ng-if="embr.brName">{{ embr.brName }}</label>
+      </div>
+      <div class="pillar">
+        <div class="pile">
+          <div class="pile-header">
+            <span class="main-title">متوسط زمن الخدمة</span>
+            <span class="sub-header">(بالدقائق)</span>
+
+            <div class="pile-action">
+              <a
+                class="pile-action-icon refresh"
+                ng-click="loadTransactionTime($event , embr.emirate , embr.branch);loadOperationalSummaryC($event , embr.emirate , embr.branch)"
+              >
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+              </a>
+
+              <a class="pile-action-icon print" title="print">
+                <i class="fa fa-print" aria-hidden="true"></i>
+              </a>
+              <a
+                class="pile-action-icon export"
+                ng-click="export($event , barOperationalDataC)"
+                title="Export to Excel"
+              >
+                <i class="fa fa-paperclip" aria-hidden="true"></i>
+              </a>
+              <a
+                class="pile-action-icon status"
+                ng-show="transactionTime.status == 'true'"
+                title="Violation Exists"
+              >
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="pile-content">
+            <div
+              id="power-gauge-transaction2"
+              ng-hide="transactionTime.empty || transactionTime.error"
+              class="chart-gauge chart-trans"
+            ></div>
+            <div class="loading">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+            <div
+              class="chart-gauge-items"
+              ng-hide="transactionTime.empty || transactionTime.error"
+            >
+              <div class="item">
+                <i class="gauge-class0"></i>
+                منخفض
+              </div>
+              <div class="item">
+                <i class="gauge-class1"></i>
+                متوسط
+              </div>
+              <div class="item">
+                <i class="gauge-class2"></i>
+                عالي
+              </div>
+            </div>
+
+            <div
+              class="feedback-messages"
+              ng-show="transactionTime.empty || transactionTime.error"
+              ng-class="{error: transactionTime.error}"
+            >
+              <span class="empty" ng-show="transactionTime.empty"
+                >لا توجد بيانات!</span
+              >
+              <span ng-show="transactionTime.error"
+                >خطأ في الخادم الداخلي!</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="popup-scroll">
+        <div class="summary-scroll summary-operational-c">
+          <div class="table-wrapper">
+            <div class="loading" ng-show="barOperationalDataC.length == 0">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+
+            <table class="grid-table">
+              <tr>
+                <th>{{ Ctitle.ar }}</th>
+                <th ng-show="inbr == true"></th>
+                <th ng-show="inbr == false">WTT</th>
+                <th ng-show="inbr == false">TRT</th>
+                <th ng-show="inbr == false">تم خدمتهم</th>
+                <th ng-show="inbr == false">بالإنتظار</th>
+                <th ng-show="inbr == false">لم يظهروا</th>
+                <th ng-show="inbr == false">مفتوح</th>
+                <th ng-show="inbr == false">مغلق</th>
+                <th ng-show="inbr == true">الموظف</th>
+                <th ng-show="inbr == true">البروفايل</th>
+                <th ng-show="inbr == true">العميل</th>
+                <th ng-show="inbr == true">الخدمة</th>
+                <th ng-show="inbr == true">التذكرة</th>
+                <th ng-show="inbr == true">وقت تنفيذ الخدمة</th>
+                <th ng-show="inbr == true">عملاء تم خدمتهم</th>
+                <th ng-show="inbr == true">وقت الخدمة المستهدف</th>
+                <th ng-show="inbr == true">الحالة</th>
+                <th ng-show="inbr == true">TRT</th>
+              </tr>
+
+              <tbody>
+                <!--<tr ng-repeat="bs in barSummaryData | orderBy:'-wtt' | emptyToEnd:'wtt'">-->
+                <tr ng-repeat="bs in barOperationalDataC | orderBy:['sorting']">
+                  <td>
+                    <a
+                      href="#"
+                      ng-model="embr"
+                      ng-click="filterOperational('C',$event);loadTransactionTime($event , embr.emirate , embr.branch);"
+                      data-branchID="{{ bs.id }}"
+                      data-emirateID="{{ bs.emiratePrefix }}"
+                      >{{ bs.description }}</a
+                    >
+                  </td>
+                  <td ng-show="inbr == true">
+                    <i
+                      class="fa fa-exclamation-triangle violation-alert"
+                      aria-hidden="true"
+                      ng-show="bs.statusTrt == 'true'"
+                      title="Violation Exists"
+                    ></i>
+                  </td>
+                  <td ng-show="inbr == false">
+                    <div
+                      class="summary-progress summary-progress-w"
+                      data-bs="{{ bs.name ? bs.avgwtt : 0 }}"
+                      data-val="{{ bs.name ? bs.avgwtt : 0 }}"
+                    >
+                      <div class="bar"></div>
+                      <span
+                        >{{ bs.name ? (bs.avgwtt | number: 0) : 0 }} دقيقة</span
+                      >
+                    </div>
+                  </td>
+                  <td ng-show="inbr == false">
+                    <div
+                      class="summary-progress summary-progress-t"
+                      data-val="{{ bs.name ? bs.avgtrt : 0 }}"
+                    >
+                      <div class="bar"></div>
+                      <span
+                        >{{ bs.name ? (bs.avgtrt | number: 0) : 0 }} دقيقه</span
+                      >
+                    </div>
+                  </td>
+                  <td ng-show="inbr == false">{{ bs.served }}</td>
+                  <td ng-show="inbr == false">{{ bs.waitting }}</td>
+                  <td ng-show="inbr == false">{{ bs.noShow }}</td>
+                  <td ng-show="inbr == false">{{ bs.open }}</td>
+                  <td ng-show="inbr == false">{{ bs.closed }}</td>
+                  <td ng-show="inbr == true">
+                    {{ bs.staffFullName ? bs.staffFullName : "-" }}
+                  </td>
+                  <td ng-show="inbr == true">
+                    {{ bs.workProfileName ? bs.workProfileName : "-" }}
+                  </td>
+                  <td ng-show="inbr == true">{{ bs.currentCustomerName }}</td>
+                  <td ng-show="inbr == true">
+                    {{ bs.currentServiceName ? bs.currentServiceName : "-" }}
+                  </td>
+                  <td ng-show="inbr == true">
+                    {{ bs.currentTicketNumber ? bs.currentTicketNumber : "-" }}
+                  </td>
+                  <td ng-show="inbr == true ">
+                    {{
+                      bs.currentTransactionTime &&
+                      bs.currentTransactionTime != 0
+                        ? bs.currentTransactionTime
+                        : "0"
+                    }}
+                  </td>
+                  <td ng-show="inbr == true">{{ bs.customersServed }}</td>
+                  <td ng-show="inbr == true">
+                    {{
+                      bs.serviceTargetTransTime &&
+                      bs.serviceTargetTransTime != 0
+                        ? bs.serviceTargetTransTime
+                        : "0"
+                    }}
+                  </td>
+                  <td ng-show="inbr == true">
+                    <span
+                      data-status="{{ bs.status }}"
+                      ng-class="bs.status == 'OPEN' ? 'open-status' : 'close-status'"
+                      class="status-circle"
+                      title="{{ bs.status }}"
+                    ></span>
+                  </td>
+                  <td width="20%" ng-show="inbr == true">
+                    <div
+                      class="summary-progress summary-progress-t"
+                      ng-show="bs.status != 'CLOSED'"
+                      data-bs="{{ bs.name ? bs.totaltrt : 0 }}"
+                      data-val="{{ bs.name ? bs.totaltrt : 0 }}"
+                    >
+                      <div class="bar"></div>
+                      <span>{{ bs.name ? bs.totaltrt : 0 }} دقيقة</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-pillar" data-popup="served-branch">
+      <div class="breadCrumbs">
+        <label
+          ng-if="!filter.emirate"
+          ng-click="loadServedPerBranch($event);loadOperationalSummaryC($event);resetdrill();"
+          >كل الإمارات</label
+        >
+        <label
+          ng-if="embr.emName"
+          ng-click="loadServedPerBranch($event , embr.emirate);loadOperationalSummaryC($event , embr.emirate );resetdrillBranch();"
+          >{{ embr.emName }}</label
+        >
+        <label ng-if="embr.brName">{{ embr.brName }}</label>
+      </div>
+      <div class="pillar">
+        <div class="pile">
+          <div class="pile-header">
+            <span class="main-title">تم خدمتهم حسب الفرع</span>
+
+            <div class="pile-action">
+              <a
+                class="pile-action-icon refresh"
+                ng-click="loadServedPerBranch($event , embr.emirate , embr.branch);"
+              >
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+              </a>
+              <a class="pile-action-icon print" title="print">
+                <i class="fa fa-print" aria-hidden="true"></i>
+              </a>
+              <a
+                class="pile-action-icon export"
+                ng-click="export($event , barOperationalDataC)"
+                title="Export to Excel"
+              >
+                <i class="fa fa-paperclip" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="pile-content bar-li-content">
+            <div class="chart-gauge chart-bar">
+              <bar-chart
+                lay="1"
+                data="lc"
+                ng-hide="barSCharts.empty || barSCharts.error"
+                ng-repeat="lc in servedCharts"
+                id="chartBar3"
+              ></bar-chart>
+            </div>
+            <div class="loading">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+            <div class="chart-line-items selection-period">
+              <div
+                class="item"
+                ng-repeat="sp in ServedPeriod"
+                ng-click="loadServedPerBranch($event , embr.emirate , embr.branch);loadOperationalSummaryC($event , embr.emirate , embr.branch)"
+              >
+                <input
+                  type="radio"
+                  name="ServedPerBranchPP"
+                  ng-value="sp.en"
+                  ng-model="barChartConfig.duration"
+                />
+                <span>{{ sp.ar }}</span>
+              </div>
+            </div>
+
+            <div
+              class="feedback-messages"
+              ng-show="barSCharts.empty || barSCharts.error"
+              ng-class="{error: barSCharts.error}"
+            >
+              <span class="empty" ng-show="barSCharts.empty"
+                >لا توجد بيانات!</span
+              >
+              <span ng-show="barSCharts.error">خطأ في الخادم الداخلي!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="popup-scroll">
+        <div class="summary-scroll summary-scroll1">
+          <div class="table-wrapper">
+            <div class="loading" ng-show="barSummaryData.length == 0">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+
+            <table class="grid-table">
+              <tr>
+                <th>{{ Ctitle.ar }}</th>
+                <th ng-show="inbr == false">تم خدمتهم</th>
+                <th ng-show="inbr == true">الموظف</th>
+                <th ng-show="inbr == true">البروفايل</th>
+                <th ng-show="inbr == true">العميل</th>
+                <th ng-show="inbr == true">الخدمة</th>
+                <th ng-show="inbr == true">التذكرة</th>
+                <th ng-show="inbr == true">وقت تنفيذ الخدمة</th>
+                <th ng-show="inbr == true">عملاء تم خدمتهم</th>
+                <th ng-show="inbr == true">وقت الخدمة المستهدف</th>
+                <th ng-show="inbr == true">الحالة</th>
+                <th ng-show="inbr == true">TRT</th>
+              </tr>
+
+              <tbody>
+                <!--<tr ng-repeat="bs in barSummaryData | orderBy:'-wtt' | emptyToEnd:'wtt'">-->
+                <tr ng-repeat="bs in barOperationalDataC | orderBy:['sorting']">
+                  <td>
+                    <a
+                      href="#"
+                      ng-model="embr"
+                      ng-click="filterOperational('C',$event);loadServedPerBranch($event , embr.emirate , embr.branch)"
+                      data-branchID="{{ bs.id }}"
+                      data-emirateID="{{ bs.emiratePrefix }}"
+                      >{{ bs.description }}</a
+                    >
+                  </td>
+                  <td ng-show="inbr == false">{{ bs.served }}</td>
+                  <td ng-show="inbr == true">{{ bs.staffFullName }}</td>
+                  <td ng-show="inbr == true">{{ bs.workProfileName }}</td>
+                  <td ng-show="inbr == true">{{ bs.currentCustomerName }}</td>
+                  <td ng-show="inbr == true">{{ bs.currentServiceName }}</td>
+                  <td ng-show="inbr == true">{{ bs.currentTicketNumber }}</td>
+                  <td ng-show="inbr == true">
+                    {{ bs.currentTransactionTime }}
+                  </td>
+                  <td ng-show="inbr == true">{{ bs.customersServed }}</td>
+                  <td ng-show="inbr == true">
+                    {{ bs.serviceTargetTransTime }}
+                  </td>
+                  <td ng-show="inbr == true">
+                    <span
+                      data-status="{{ bs.status }}"
+                      ng-class="bs.status == 'OPEN' ? 'open-status' : 'close-status'"
+                      class="status-circle"
+                      title="{{ bs.status }}"
+                    ></span>
+                  </td>
+                  <td width="20%" ng-show="inbr == true">
+                    <div
+                      class="summary-progress summary-progress-t"
+                      data-bs="{{ bs.name ? bs.totaltrt : 0 }}"
+                      data-val="{{ bs.name ? bs.totaltrt : 0 }}"
+                    >
+                      <div class="bar"></div>
+                      <span>{{ bs.name ? bs.totaltrt : 0 }} دقيقه</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-pillar" data-popup="counter-status">
+      <div class="breadCrumbs">
+        <label
+          ng-if="!filter.emirate"
+          ng-click="loadCounterStatus($event);loadOperationalSummaryC($event);resetdrill();"
+          >كل الإمارات</label
+        >
+        <label
+          ng-if="embr.emName"
+          ng-click="loadCounterStatus($event , embr.emirate);loadOperationalSummaryC($event , embr.emirate );resetdrillBranch();"
+          >{{ embr.emName }}</label
+        >
+        <label ng-if="embr.brName">{{ embr.brName }}</label>
+      </div>
+      <div class="pillar">
+        <div class="pile mid-pile">
+          <div class="pile-header">
+            <span class="main-title">حالة منافذ الخدمة</span>
+
+            <div class="pile-action">
+              <a
+                class="pile-action-icon refresh"
+                ng-click="loadCounterStatus($event , embr.emirate , embr.branch);loadOperationalSummaryC($event , embr.emirate , embr.branch)"
+              >
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+              </a>
+              <a class="pile-action-icon print" title="print">
+                <i class="fa fa-print" aria-hidden="true"></i>
+              </a>
+              <a
+                class="pile-action-icon export"
+                ng-click="export($event , barOperationalDataC)"
+                title="Export to Excel"
+              >
+                <i class="fa fa-paperclip" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="pile-content">
+            <div class="chart-gauge chart-donut">
+              <donut-chart
+                data="dc"
+                ng-hide="counterStatus.empty || counterStatus.error"
+                ng-repeat="dc in donutCharts.data"
+              ></donut-chart>
+            </div>
+            <div class="loading">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+            <div
+              class="chart-gauge-items chart-donut-items"
+              ng-hide="counterStatus.empty || counterStatus.error"
+            >
+              <div class="item">
+                <i class="donut-class1"></i>
+                مفتوح
+                <b>({{ donutCharts.open }})</b>
+              </div>
+              <div class="item">
+                <i class="donut-class0"></i>
+                مغلق
+                <b>({{ donutCharts.closed }})</b>
+              </div>
+            </div>
+
+            <div
+              class="feedback-messages"
+              ng-show="counterStatus.empty || counterStatus.error"
+              ng-class="{error: counterStatus.error}"
+            >
+              <span class="empty" ng-show="counterStatus.empty"
+                >لا توجد بيانات!</span
+              >
+              <span ng-show="counterStatus.error">خطأ في الخادم الداخلي!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="popup-scroll">
+        <div class="summary-scroll">
+          <div class="table-wrapper">
+            <div class="loading" ng-show="barOperationalDataC.length == 0">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+
+            <table class="grid-table">
+              <tr>
+                <th>{{ Ctitle.ar }}</th>
+                <th ng-show="inbr == false">مفتوح</th>
+                <th ng-show="inbr == false">مغلق</th>
+                <th ng-show="inbr == true">الموظف</th>
+                <th ng-show="inbr == true">البروفايل</th>
+                <th ng-show="inbr == true">العميل</th>
+                <th ng-show="inbr == true">الخدمة</th>
+                <th ng-show="inbr == true">التذكرة</th>
+                <th ng-show="inbr == true">وقت تنفيذ الخدمة</th>
+                <th ng-show="inbr == true">عملاء تم خدمتهم</th>
+                <th ng-show="inbr == true">وقت الخدمة المستهدف</th>
+                <th ng-show="inbr == true">الحالة</th>
+                <th ng-show="inbr == true">TRT</th>
+              </tr>
+
+              <tbody>
+                <!--<tr ng-repeat="bs in barSummaryData | orderBy:'-wtt' | emptyToEnd:'wtt'">-->
+                <tr ng-repeat="bs in barOperationalDataC | orderBy:['sorting']">
+                  <td>
+                    <a
+                      href="#"
+                      ng-model="embr"
+                      ng-click="filterOperational('C',$event);loadCounterStatus($event , embr.emirate , embr.branch);"
+                      data-branchID="{{ bs.id }}"
+                      data-emirateID="{{ bs.emiratePrefix }}"
+                      >{{ bs.description }}</a
+                    >
+                  </td>
+                  <td ng-show="inbr == false">{{ bs.open }}</td>
+                  <td ng-show="inbr == false">{{ bs.closed }}</td>
+                  <td ng-show="inbr == true">
+                    {{ bs.staffFullName ? bs.staffFullName : "-" }}
+                  </td>
+                  <td ng-show="inbr == true">
+                    {{ bs.workProfileName ? bs.workProfileName : "-" }}
+                  </td>
+                  <td ng-show="inbr == true">{{ bs.currentCustomerName }}</td>
+                  <td ng-show="inbr == true">
+                    {{ bs.currentServiceName ? bs.currentServiceName : "-" }}
+                  </td>
+                  <td ng-show="inbr == true">
+                    {{ bs.currentTicketNumber ? bs.currentTicketNumber : "-" }}
+                  </td>
+                  <td ng-show="inbr == true ">
+                    {{
+                      bs.currentTransactionTime &&
+                      bs.currentTransactionTime != 0
+                        ? bs.currentTransactionTime
+                        : "-"
+                    }}
+                  </td>
+                  <td ng-show="inbr == true">{{ bs.customersServed }}</td>
+                  <td ng-show="inbr == true">
+                    {{
+                      bs.serviceTargetTransTime &&
+                      bs.serviceTargetTransTime != 0
+                        ? bs.serviceTargetTransTime
+                        : "-"
+                    }}
+                  </td>
+                  <td ng-show="inbr == true">
+                    <span
+                      data-status="{{ bs.status }}"
+                      ng-class="bs.status == 'OPEN' ? 'open-status' : 'close-status'"
+                      class="status-circle"
+                      title="{{ bs.status }}"
+                    ></span>
+                  </td>
+                  <td width="20%" ng-show="inbr == true">
+                    <div
+                      class="summary-progress summary-progress-t"
+                      ng-show="bs.status != 'CLOSED'"
+                      data-bs="{{ bs.name ? bs.totaltrt : 0 }}"
+                      data-val="{{ bs.name ? bs.totaltrt : 0 }}"
+                    >
+                      <div class="bar"></div>
+                      <span>{{ bs.name ? bs.totaltrt : 0 }} دقيقه</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-pillar" data-popup="customer-status">
+      <div class="breadCrumbs">
+        <label
+          ng-if="!filter.emirate"
+          ng-click="loadCustomerStatus($event);loadOperationalSummaryQ($event);resetdrill();"
+          >كل الإمارات</label
+        >
+        <label
+          ng-if="embr.emName"
+          ng-click="loadCustomerStatus($event , embr.emirate);loadOperationalSummaryQ($event , embr.emirate );resetdrillBranch();"
+          >{{ embr.emName }}</label
+        >
+        <label ng-if="embr.brName">{{ embr.brName }}</label>
+      </div>
+      <div class="pillar">
+        <div class="pile mid-pile">
+          <div class="pile-header">
+            <span class="main-title">حالة المتعاملين</span>
+
+            <div class="pile-action">
+              <a
+                class="pile-action-icon refresh"
+                ng-click="loadCustomerStatus($event , embr.emirate , embr.branch);loadOperationalSummaryQ($event , embr.emirate , embr.branch)"
+              >
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+              </a>
+              <a class="pile-action-icon print" title="print">
+                <i class="fa fa-print" aria-hidden="true"></i>
+              </a>
+              <a
+                class="pile-action-icon export"
+                ng-click="export($event , barOperationalDataQ)"
+                title="Export to Excel"
+              >
+                <i class="fa fa-paperclip" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="pile-content">
+            <div class="chart-gauge chart-donut chart-pie">
+              <pie-chart
+                lay="lay"
+                data="pc"
+                ng-hide="customerStatus.empty || customerStatus.error"
+                ng-repeat="pc in pieCharts.data"
+              ></pie-chart>
+            </div>
+            <div class="loading">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+            <div
+              class="chart-gauge-items chart-donut-items chart-pie-items"
+              ng-hide="customerStatus.empty || customerStatus.error"
+            >
+              <div class="item">
+                <i class="pie-class0"></i>
+                تم خدمتهم
+                <b>({{ pieCharts.total }})</b>
+              </div>
+              <div class="item">
+                <i class="pie-class1"></i>
+                منتظرين
+                <b>({{ pieCharts.waiting }})</b>
+              </div>
+              <div class="item">
+                <i class="pie-class2"></i>
+                لم يظهروا
+                <b>({{ pieCharts.noShow }})</b>
+              </div>
+            </div>
+
+            <div
+              class="feedback-messages"
+              ng-show="customerStatus.empty || customerStatus.error"
+              ng-class="{error: customerStatus.error}"
+            >
+              <span class="empty" ng-show="customerStatus.empty"
+                >لا توجد بيانات!</span
+              >
+              <span ng-show="customerStatus.error">خطأ في الخادم الداخلي!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="popup-scroll">
+        <div class="summary-scroll">
+          <div class="table-wrapper">
+            <div class="loading" ng-show="barOperationalDataQ.length == 0">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+
+            <table class="grid-table">
+              <tr>
+                <th>{{ Qtitle.ar }}</th>
+                <th ng-hide="inbr == true">تم خدمتهم</th>
+                <th ng-hide="inbr == true">بالإنتظار</th>
+                <th ng-hide="inbr == true">لم يظهروا</th>
+                <th>WTT</th>
+                <th>TRT</th>
+                <th ng-show="inbr == true">فرع</th>
+                <th ng-show="inbr == true">عملاء تم خدمتهم</th>
+                <th ng-show="inbr == true">عملاء منتظرين</th>
+                <th ng-show="inbr == true">الوقت المتوقع للإنتظار</th>
+                <th ng-show="inbr == true">نقاط الخدمة المفتوحه</th>
+                <th ng-show="inbr == true">WTT حاله</th>
+              </tr>
+
+              <tbody>
+                <!--<tr ng-repeat="bs in barSummaryData | orderBy:'-wtt' | emptyToEnd:'wtt'">-->
+                <tr
+                  ng-repeat="bs in barOperationalDataQ | orderBy:['!avgwtt','-avgwtt']"
+                >
+                  <td>
+                    <a
+                      href="#"
+                      ng-model="embr"
+                      ng-click="filterOperational('Q',$event);loadCustomerStatus($event , embr.emirate , embr.branch)"
+                      data-branchID="{{ bs.id }}"
+                      data-emirateID="{{ bs.emiratePrefix }}"
+                      >{{ bs.description }}</a
+                    >
+                  </td>
+                  <td ng-hide="inbr == true">{{ bs.served }}</td>
+                  <td ng-hide="inbr == true">{{ bs.waitting }}</td>
+                  <td ng-hide="inbr == true">{{ bs.noShow || 0 }}</td>
+                  <td>
+                    <div
+                      class="summary-progress summary-progress-w"
+                      data-val="{{ bs.name ? bs.avgwtt : 0 }}"
+                    >
+                      <div class="bar"></div>
+                      <span
+                        >{{ bs.name ? (bs.avgwtt | number: 0) : 0 }} دقيقة</span
+                      >
+                    </div>
+                  </td>
+                  <td>
+                    <div
+                      class="summary-progress summary-progress-t"
+                      data-val="{{ bs.name ? bs.avgtrt : 0 }}"
+                    >
+                      <div class="bar"></div>
+                      <span
+                        >{{ bs.name ? (bs.avgtrt | number: 0) : 0 }} دقيقة</span
+                      >
+                    </div>
+                  </td>
+                  <td ng-show="inbr == true">{{ bs.branchName }}</td>
+                  <td ng-show="inbr == true">{{ bs.customersServed }}</td>
+                  <td ng-show="inbr == true">{{ bs.customersWaiting }}</td>
+                  <td ng-show="inbr == true">{{ bs.estimatedWaitingTime }}</td>
+                  <td ng-show="inbr == true">{{ bs.openServicePoints }}</td>
+                  <td ng-show="inbr == true">{{ bs.statusWtt }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-pillar" data-popup="happiness">
+      <div class="breadCrumbs">
+        <label
+          ng-if="!filter.emirate"
+          ng-click="loadHappinessRadar($event);resetdrill();"
+          >كل الإمارات</label
+        >
+        <label
+          ng-if="embr.emName"
+          ng-click="loadHappinessRadar($event , embr.emirate);resetdrillBranch();"
+          >{{ embr.emName }}</label
+        >
+        <label ng-if="embr.brName">{{ embr.brName }}</label>
+      </div>
+      <div class="pillar pillar-summary">
+        <div class="clearfix">
+          <div class="pile">
+            <div class="pile-header">
+              <span class="main-title">مؤشر السعادة</span>
+
+              <div class="pile-action">
+                <a
+                  class="pile-action-icon refresh"
+                  ng-click="loadHappinessRadar($event , embr.emirate , embr.branch)"
+                >
+                  <i class="fa fa-refresh" aria-hidden="true"></i>
+                </a>
+                <a class="pile-action-icon print" title="print">
+                  <i class="fa fa-print" aria-hidden="true"></i>
+                </a>
+                <a
+                  class="pile-action-icon export"
+                  ng-click="export($event , happinessRadar.data)"
+                  title="Export to Excel"
+                >
+                  <i class="fa fa-paperclip" aria-hidden="true"></i>
+                </a>
+              </div>
+            </div>
+            <div class="pile-content">
+              <div class="chart-line-items selection-period">
+                <div
+                  class="item"
+                  ng-repeat="sp in happinessDuration"
+                  ng-click="loadHappinessRadar($event)"
+                >
+                  <input
+                    type="radio"
+                    name="happinessradarduration"
+                    ng-value="sp.en"
+                    ng-model="happinessconfig.duration"
+                  />
+                  <span>{{ sp.ar }}</span>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+              <div
+                class="row radar-happiness chart-gauge"
+                ng-hide="happinessRadar.empty || happinessRadar.error"
+              >
+                <div class="col-md-4">
+                  <h5 class="text-center">كلمات امتنان</h5>
+                  <div class="happiness-exc">
+                    <div class="chart-gauge chart-donut chart-pie">
+                      <pie-chart
+                        lay="lay"
+                        data="hc"
+                        ng-repeat="hc in happinessexEn.data"
+                      ></pie-chart>
+                    </div>
+                    <div
+                      class="chart-gauge-items chart-donut-items chart-pie-items"
+                      ng-hide="happinessexEn.empty || happinessexEn.error"
+                    >
+                      <div class="item">
+                        <i class="pie-class0"></i>
+                        {{ happinessexEn.label1_ar }}
+                        <b>({{ happinessexEn.value1 }})</b>
+                      </div>
+                      <div class="item">
+                        <i class="pie-class1"></i>
+                        {{ happinessexEn.label2_ar }}
+                        <b>({{ happinessexEn.value2 }})</b>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <h5 class="text-center">رادار فرص التحسين</h5>
+                  <div id="good-radar-ar" class="clearfix radar"></div>
+                  <div class="row clearfix">
+                    <div class="col-md-12">
+                      <hr />
+                    </div>
+                    <div
+                      class="details"
+                      ng-repeat="hp in happinessRadar.data.good"
+                    >
+                      <div class="col-md-6">
+                        <div class="detail">
+                          <p>
+                            <span class="text-muted">{{ hp.texts.ar }}</span
+                            >({{ hp.value }})
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <h5 class="text-center">رادار أسباب عدم السعادة</h5>
+                  <div id="poor-radar-ar" class="clearfix radar"></div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <hr />
+                    </div>
+                    <div class="details">
+                      <div
+                        class="details"
+                        ng-repeat="hp in happinessRadar.data.poor"
+                      >
+                        <div class="col-md-6">
+                          <div class="detail">
+                            <p>
+                              <span class="text-muted">{{ hp.texts.ar }}</span
+                              >({{ hp.value }})
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="loading">
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+              </div>
+              <div
+                class="feedback-messages"
+                ng-show="happinessRadar.data.empty || happinessRadar.data.error"
+                ng-class="{error: happinessRadar.data.error}"
+              >
+                <span class="empty" ng-show="happinessRadar.data.empty"
+                  >No Data Found!</span
+                >
+                <span ng-show="happinessRadar.error"
+                  >Internal Server Error!</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-pillar" data-popup="served-detpt">
+      <div class="breadCrumbs">
+        <label
+          ng-if="!filter.emirate"
+          ng-click="loadServedPerDepartment($event);loadServedPerDepartmentDetails($event);resetdrill();"
+          >كل الإمارات</label
+        >
+        <label
+          ng-if="embr.emName"
+          ng-click="loadServedPerDepartment($event , embr.emirate);loadServedPerDepartmentDetails($event , embr.emirate );resetdrillBranch();"
+          >{{ embr.emName }}</label
+        >
+        <label ng-if="embr.brName">{{ embr.brName }}</label>
+      </div>
+      <div class="pillar">
+        <div class="pile">
+          <div class="pile-header">
+            <span class="main-title">تم خدمتهم حسب القسم</span>
+
+            <div class="pile-action">
+              <a
+                class="pile-action-icon refresh"
+                ng-click="loadServedPerDepartment($event , embr.emirate , embr.branch);loadServedPerDepartmentDetails($event , embr.emirate , embr.branch)"
+              >
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+              </a>
+              <a class="pile-action-icon print" title="print">
+                <i class="fa fa-print" aria-hidden="true"></i>
+              </a>
+              <a
+                class="pile-action-icon export"
+                ng-click="export($event , servedDeptDetails.data)"
+                title="Export to Excel"
+              >
+                <i class="fa fa-paperclip" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="pile-content bar-li-content">
+            <div class="chart-gauge chart-dept">
+              <bar-chart
+                data="lc"
+                ng-repeat="lc in servedDeptCharts.data"
+                ng-hide="servedDeptCharts.empty || servedDeptCharts.error"
+                id="chartBar4"
+              ></bar-chart>
+            </div>
+            <div class="loading">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+            <div class="chart-line-items selection-period">
+              <div
+                class="item"
+                ng-repeat="sp in DepartmentPeriod"
+                ng-click="loadServedPerDepartment($event , embr.emirate , embr.branch);loadServedPerDepartmentDetails($event , embr.emirate , embr.branch)"
+              >
+                <input
+                  type="radio"
+                  name="ServedPerDeptPP"
+                  ng-value="sp.en"
+                  ng-model="barChartDConfig.duration"
+                />
+                <span>{{ sp.ar }}</span>
+              </div>
+            </div>
+            <div
+              class="feedback-messages"
+              ng-show="servedDeptCharts.empty || servedDeptCharts.error"
+              ng-class="{error: servedDeptCharts.error}"
+            >
+              <span class="empty" ng-show="servedDeptCharts.empty"
+                >لا توجد بيانات!</span
+              >
+              <span ng-show="servedDeptCharts.error"
+                >خطأ في الخادم الداخلي!</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="popup-scroll">
+        <div class="summary-scroll">
+          <div class="table-wrapper">
+            <div class="loading" ng-show="servedDeptDetails.length == 0">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+
+            <div id="myID2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-pillar pillar-summary" data-popup="branch-summary">
+      <div class="breadCrumbs">
+        <label
+          ng-if="!filter.emirate"
+          ng-click="loadBranchSummary($event);resetdrill();"
+          >كل الإمارات</label
+        >
+        <label
+          ng-if="embr.emName"
+          ng-click="loadBranchSummary($event , embr.emirate);resetdrillBranch();"
+          >{{ embr.emName }}</label
+        >
+        <label ng-if="embr.brName">{{ embr.brName }}</label>
+      </div>
+      <div class="pillar pillar-summary">
+        <div class="pile">
+          <div class="pile-header">
+            <span class="main-title">تفاصيل الفرع</span>
+
+            <div class="pile-action">
+              <a
+                class="pile-action-icon refresh"
+                ng-click="loadBranchSummary($event , embr.emirate , embr.branch)"
+              >
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+              </a>
+              <a class="pile-action-icon print" title="print">
+                <i class="fa fa-print" aria-hidden="true"></i>
+              </a>
+              <a
+                class="pile-action-icon export"
+                ng-click="export($event , barSummaryData)"
+                title="Export to Excel"
+              >
+                <i class="fa fa-paperclip" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="pile-content">
+            <div class="chart-gauge chart-summary popup-scroll">
+              <div
+                class="summary-scroll summary-scroll1"
+                ng-hide="barSummary.empty || barSummary.error"
+              >
+                <div class="table-wrapper">
+                  <div class="loading" ng-show="barSummaryData.length == 0">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                  </div>
+
+                  <table class="grid-table">
+                    <tr>
+                      <th>{{ Btitle.ar }}</th>
+                      <th ng-hide="cou_d == true">تم خدمتهم</th>
+                      <th ng-hide="cou_d == true">بالإنتظار</th>
+                      <th ng-hide="cou_d == true">WTT</th>
+                      <th ng-hide="cou_d == true">TRT</th>
+                      <th ng-hide="cou_d == true">مفتوح</th>
+                      <th ng-hide="cou_d == true">مغلق</th>
+                      <th ng-show="cou_d == true">الموظف</th>
+                      <th ng-show="cou_d == true">البروفايل</th>
+                      <th ng-show="cou_d == true">العميل</th>
+                      <th ng-show="cou_d == true">الخدمة</th>
+                      <th ng-show="cou_d == true">التذكرة</th>
+                      <th ng-show="cou_d == true">وقت تنفيذ الخدمة</th>
+                      <th ng-show="cou_d == true">عملاء تم خدمتهم</th>
+                      <th ng-show="cou_d == true">وقت الخدمة المستهدف</th>
+                      <th ng-show="cou_d == true">الحالة</th>
+                      <th ng-show="cou_d == true">TRT</th>
+                    </tr>
+
+                    <tbody>
+                      <!--<tr ng-repeat="bs in barSummaryData | orderBy:'-wtt' | emptyToEnd:'wtt'">-->
+                      <tr
+                        ng-repeat="bs in barSummaryData | orderBy:['sorting']"
+                      >
+                        <td ng-hide="cou_d == true">
+                          <a
+                            href="#"
+                            ng-model="embr"
+                            ng-click="filterOperational('P',$event)"
+                            data-branchID="{{ bs.branchId }}"
+                            data-emirateID="{{ bs.emiratePrefix }}"
+                            >{{ bs.description }}</a
+                          >
+                        </td>
+                        <td ng-show="cou_d == true">{{ bs.counter }}</td>
+                        <td ng-hide="cou_d == true">{{ bs.served }}</td>
+                        <td ng-hide="cou_d == true">{{ bs.waitting }}</td>
+                        <td ng-hide="cou_d == true">
+                          <div
+                            class="summary-progress summary-progress-w"
+                            data-val="{{ bs.avgwtt || 0 }}"
+                          >
+                            <div class="bar"></div>
+                            <span
+                              >{{ (bs.avgwtt | number: 0) || 0 }} دقيقة</span
+                            >
+                          </div>
+                        </td>
+                        <td ng-hide="cou_d == true">
+                          <div
+                            class="summary-progress summary-progress-t"
+                            data-val="{{ bs.avgtrt || 0 }}"
+                          >
+                            <div class="bar"></div>
+                            <span
+                              >{{ (bs.avgtrt | number: 0) || 0 }} دقيقة</span
+                            >
+                          </div>
+                        </td>
+                        <td ng-hide="cou_d == true">{{ bs.open }}</td>
+                        <td ng-hide="cou_d == true">{{ bs.closed }}</td>
+                        <td ng-show="cou_d == true">{{ bs.staffFullName }}</td>
+                        <td ng-show="cou_d == true">
+                          {{ bs.workProfileName }}
+                        </td>
+                        <td ng-show="cou_d == true">
+                          {{ bs.currentCustomerName }}
+                        </td>
+                        <td ng-show="cou_d == true">
+                          {{ bs.currentServiceName }}
+                        </td>
+                        <td ng-show="cou_d == true">
+                          {{ bs.currentTicketNumber }}
+                        </td>
+                        <td ng-show="cou_d == true">
+                          {{ bs.currentTransactionTime }}
+                        </td>
+                        <td ng-show="cou_d == true">
+                          {{ bs.customersServed }}
+                        </td>
+                        <td ng-show="cou_d == true">
+                          {{ bs.serviceTargetTransTime }}
+                        </td>
+                        <td ng-show="cou_d == true">
+                          <span
+                            ng-class="bs.status == 'OPEN' ? 'open-status' : 'close-status'"
+                            class="status-circle"
+                            title="{{ bs.status }}"
+                          ></span>
+                        </td>
+                        <td width="20%" ng-show="cou_d == true">
+                          <div
+                            class="summary-progress summary-progress-t"
+                            data-bs="{{ bs.name ? bs.totaltrt : 0 }}"
+                            data-val="{{ bs.name ? bs.totaltrt : 0 }}"
+                          >
+                            <div class="bar"></div>
+                            <span>{{ bs.name ? bs.totaltrt : 0 }} دقيقة</span>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="loading">
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+              <div class="loading-dot"></div>
+            </div>
+
+            <div
+              class="feedback-messages"
+              ng-show="barSummary.empty || customerStatus.error"
+              ng-class="{error: barSummary.error}"
+            >
+              <span class="empty" ng-show="barSummary.empty"
+                >لا توجد بيانات!</span
+              >
+              <span ng-show="barSummary.error">خطأ في الخادم الداخلي!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-pillar" data-popup="salaries">
+            <div class="breadCrumbs">
+              <label
+                ng-if="!filter.emirate"
+                ng-click="loadSalariesList($event);resetdrill();"
+                >كل الإمارات</label
+              >
+              <label
+                ng-if="embr.emName"
+                ng-click="loadSalariesList($event, embr.emirate);resetdrillBranch();"
+                >{{ embr.emName }}</label
+              >
+              <label ng-if="embr.brName">{{ embr.brName }}</label>
+            </div>
+            <div class="popup-scroll">
+              <span class="main-title mx-1">الرواتب</span>
+      
+              <div class="summary-scroll ">
+                <div class="table-wrapper">
+                  <div class="loading" ng-show="SalariesTable.length == 0">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                  </div>
+                  <table class="grid-table">
+                    <tr>
+                      <th>{{ Qtitle.ar }}</th>
+                      <th>العدد</th>
+                      <th>النسبة</th>
+                    </tr>
+                    <tbody>
+                      <tr ng-repeat="sal in SalariesTableData">
+                        <td>
+                          <a
+                            href=""
+                            ng-model="embr"
+                            data-branchID="{{ sal.branchId }}"
+                            data-emirateID="{{ sal.emiratePrefix }}"
+                            ng-click="filterOperational('A',$event);"
+                            >{{ sal.name }}</a
+                          >
+                        </td>
+                        <td>{{ sal.count }}</td>
+                        <td>{{ sal.percentage }}%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div
+                  class="feedback-messages"
+                  ng-show="SalariesTable.empty || SalariesTable.error"
+                  ng-class="{error: SalariesTable.error}"
+                >
+                  <span class="empty" ng-show="SalariesTable.empty"
+                  >لا توجد بيانات!</span
+                  >
+                  <span ng-show="SalariesTable.error">خطأ في الخادم الداخلي!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+          <div class="popup-pillar" data-popup="employees">
+            <div class="breadCrumbs">
+              <label
+                ng-if="!filter.emirate"
+                ng-click="loadEmployeesList($event);resetdrill();"
+                >كل الإمارات</label
+              >
+              <label
+                ng-if="embr.emName"
+                ng-click="loadEmployeesList($event, embr.emirate);resetdrillBranch();"
+                >{{ embr.emName }}</label
+              >
+              <label ng-if="embr.brName">{{ embr.brName }}</label>
+            </div>
+            <div class="pile-content">
+              <span class="main-title mx-1">الموارد البشرية</span>
+      
+              <div class="popup-scroll">
+                <div class="summary-scroll ">
+                  <div class="table-wrapper">
+                    <div class="loading" ng-show="EmployeesTable.length == 0">
+                      <div class="loading-dot"></div>
+                      <div class="loading-dot"></div>
+                      <div class="loading-dot"></div>
+                      <div class="loading-dot"></div>
+                    </div>
+                    <table class="grid-table">
+                      <tr>
+                        <th>{{ Qtitle.ar }}</th>
+      
+                        <th ng-hide="cou_dx == true">إماراتى</th>
+                        <th ng-hide="cou_dx == true">خليجى</th>
+                        <th ng-hide="cou_dx == true">عربى</th>
+                        <th ng-hide="cou_dx == true">اجنبى</th>
+      
+                        <th ng-show="cou_dx == true">رقم الحساب</th>
+                        <th ng-show="cou_dx == true">الجنسية</th>
+                        <th ng-show="cou_dx == true">المنطقة</th>
+                      </tr>
+                      <tbody>
+                        <tr ng-repeat="eal in EmployeesTableData">
+                          <td>
+                            <a
+                              href=""
+                              ng-model="embr"
+                              data-branchID="{{ eal.branchId }}"
+                              data-emirateID="{{ eal.emiratePrefix }}"
+                              ng-click="filterOperational('EM',$event);"
+                              >{{ eal.name }}</a
+                            >
+                          </td>
+      
+                          <td ng-hide="cou_dx == true">
+                            {{ eal.Emirati == undefined ? "-" : eal.Emirati + "%" }}
+                          </td>
+                          <td ng-hide="cou_dx == true">
+                            {{ eal.GCC == undefined ? "-" : eal.GCC + "%" }}
+                          </td>  
+      
+                          <td ng-hide="cou_dx == true">
+                            {{ eal.Arab == undefined ? "-" : eal.Arab + "%" }}
+                          </td>
+                          <td ng-hide="cou_dx == true">
+                            {{
+                              eal.Foreigners == undefined ? "-" : eal.Foreigners + "%"
+                            }}
+                          </td>
+      
+                          <td ng-show="cou_dx == true">{{ eal.estAccountNumber }}</td>
+                          <td ng-show="cou_dx == true">
+                            {{ eal.empNationalityNameAr }}
+                          </td>
+                          <td ng-show="cou_dx == true">{{ eal.regionAr }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div
+                    class="feedback-messages"
+                    ng-show="EmployeesTable.empty || EmployeesTable.error"
+                    ng-class="{error: EmployeesTable.error}"
+                  >
+                    <span class="empty" ng-show="EmployeesTable.empty"
+                    >لا توجد بيانات!</span
+                    >
+                    <span ng-show="EmployeesTable.error">خطأ في الخادم الداخلي!</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+  </div>
+</section>

@@ -1,0 +1,470 @@
+<section class="main inner" data-controller="finesCtrl">
+
+    <div class="d-flex">
+        <div><a href="#"><i class="fa fa-arrow-right" aria-hidden="true"></i></a></div>
+        <div>
+            <button class="btn-icon" ng-click="toggleAddFine()" ng-disabled="addFineFlag">إضافة مخالفة<i class="fa fa-plus"
+                    aria-hidden="true"></i></button>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-heading d-flex">
+            <h3>بحث</h3>
+            <div class="collapse-icon">
+                <i class="fa fa-caret-up" aria-hidden="true"></i>
+            </div>
+        </div>
+        <div class="panel-collapse collapse in">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <label for="fromdatFine">من</label>
+                        <div id="fromdatFine" class="input-group date">
+                            <input type="text" class="form-control" placeholder="From" ng-model="fineFromDate"
+                                init-date="fineFromDate" datepicker="">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <label for="todatFine">إلى</label>
+                        <div id="todatFine" class="input-group date">
+                            <input type="text" class="form-control" placeholder="To" ng-model="fineToDate" init-date="fineToDate"
+                                datepicker="">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4 mt-40">
+                        <a href="" class="gold-btn w-50 mr-10" ng-click="searchFines($event)">بحث</a>
+                        <a href="" class="white-btn w-50" ng-click="resetDeafult($event)">مسح</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="table-vertical-scroll" class="slideTable" custom-scroll="minimal-dark">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <th colspan="3">كود المركز</th>
+                    <th colspan="3">إسم المركز</th>
+                    <th colspan="4">عدد المخالفات</th>
+                </thead>
+                <tbody ng-repeat="n in allFines.data" class="active">
+                    <tr>
+                        <td data-center="{{n.branchId}}" data-emirate="{{n.emirateCode}}" colspan="3">
+                            <a href="" class="expand-btn" ng-click="loadFinesDetails($event)"><i class="fa fa-plus-circle"
+                                    aria-hidden="true"></i></a>
+                            <span class="centerCode">{{n.centerCode}}</span>
+                        </td>
+                        <td colspan="3">{{n.centerName}}</td>
+                        <td colspan="4">{{n.violationCount}}</td>
+                    </tr>
+
+                    <tr ng-repeat="nd in allFinesDetails.data" data-fineDetailId="{{nd.violationId}}">
+                        <td>{{$index + 1}}</td>
+                        <td>{{nd.violationTypeMaster}}</td>
+                        <td>{{nd.violationTypeDetail}}</td>
+                        <td>{{nd.violationActionDetail}}</td>
+                        <td>{{nd.violationDetail}}</td>
+                        <td>{{nd.violationDate}} </td>
+                        <td>{{nd.notes}} </td>
+                        <td>{{nd.amount}}</td>
+                        <td>{{nd.status == 1 ? "إرسلت" : "لم ترسل"}}</td>
+                        <td>
+                            <a href="" ng-click="toggleViewFineDetails($event)" class="light-btn">عرض</a>
+                            <!-- <a href="" class="light-btn">إعادة إرسال</a> -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="loading" ng-show="loading || loadingDetails">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+        </div>
+        <div class="feedback-messages" ng-show="allFines.empty || allFines.error" ng-class="{error: allFines.error}">
+            <span class="empty" ng-show="allFines.empty">لا توجد بيانات!</span>
+            <span ng-show="allFines.error">خطأ في الخادم الداخلي!</span>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <modal title="إضافة مخالفة" class="" visible="showModalAddFine" data-backdrop="static" data-keyboard="false">
+
+        <form ng-submit="addFine()" name="fineForm">
+            <h4 class="">تفاصيل الفرع</h4>
+            <hr />
+
+            <div class="row">
+                <div class="col-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="centerName">إسم المركز</label>
+                        <input type="text" name="centerName" ng-model="branchDetail.centerName" class="form-control" id="centerName"
+                            disabled="disabled" placeholder="center name ..." />
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="referenceNo">رقم المرجع</label>
+                        <i class="fa fa-asterisk req-error" aria-hidden="true" ng-show="fineForm.referenceNo.$error.required"></i>
+                        <input type="text" name="referenceNo" ng-model="fine.referenceNo" class="form-control" id="referenceNo"
+                            placeholder="رقم المرجع..." ng-required="true" />
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="valueBankGuarantee">قيمة الضمان المصرفي</label>
+                        <i class="fa fa-asterisk req-error" aria-hidden="true" ng-show="fineForm.valueBankGuarantee.$error.required"></i>
+                        <input type="number" min="0" name="valueBankGuarantee" ng-model="fine.valueBankGuarantee" class="form-control"
+                            ng-pattern="regex" ng-trim="false" id="valueBankGuarantee" placeholder="قيمة الضمان المصرفى..."
+                            ng-required="true" />
+                        <span class="req-error f-11" ng-show="fineForm.valueBankGuarantee.$invalid && fineForm.valueBankGuarantee.$touched">رقم
+                            غير مسموح به</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="emirateName">الإمارة</label>
+                        <input type="text" name="emirateName" ng-model="branchDetail.emirateName" class="form-control"
+                            id="emirateName" disabled="disabled" placeholder="إسم الإمارة..." />
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="dateLicense">تاريخ الترخيص</label>
+                        <i class="fa fa-asterisk req-error" aria-hidden="true" ng-show="fineForm.dateLicense.$error.required"></i>
+                        <input type="text" name="dateLicense" ng-model="fine.dateLicense" class="form-control" id="dateLicense"
+                            placeholder="تاريخ الترخيص..." init-date="fine.dateLicense" datepicker="" ng-required="true" />
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="tradeLicenseExpDate">انتهاء الرخصة التجارية</label>
+                        <i class="fa fa-asterisk req-error" aria-hidden="true" ng-show="fineForm.tradeLicenseExpDate.$error.required"></i>
+                        <input type="text" name="tradeLicenseExpDate" ng-model="fine.tradeLicenseExpDate" class="form-control"
+                            id="tradeLicenseExpDate" placeholder="إنتهار الرخصة التجارية..." init-date="fine.dateLicense"
+                            datepicker="" ng-required="true" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="ownerName">إسم مالك المركز</label>
+                        <input type="text" name="ownerName" ng-model="branchDetail.ownerName" class="form-control" id="ownerName"
+                            disabled="disabled" placeholder="إسم مالك المركز..." />
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="unpaidCharges">مخالفات غير مدفوعة</label>
+                        <i class="fa fa-asterisk req-error" aria-hidden="true" ng-show="fineForm.unpaidCharges.$error.required"></i>
+                        <input type="number" min="0" name="unpaidCharges" ng-model="fine.unpaidCharges" class="form-control"
+                            ng-pattern="regex" ng-trim="false" id="unpaidCharges" placeholder="مخالفات غير مدفوعة..."
+                            ng-required="true" />
+                        <span class="req-error f-11" ng-show="fineForm.unpaidCharges.$invalid && fineForm.unpaidCharges.$touched">رقم
+                            غير مسموح به</span>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="numPreviousViolations">عدد المخالفات السابقة</label>
+                        <i class="fa fa-asterisk req-error" aria-hidden="true" ng-show="fineForm.numPreviousViolations.$error.required"></i>
+                        <input type="number" min="0" name="numPreviousViolations" ng-model="fine.numPreviousViolations"
+                            class="form-control" id="numPreviousViolations" placeholder="عدد المخالفات السابقة..."
+                            ng-pattern="regex" ng-trim="false" ng-required="true" />
+                        <span class="req-error f-11" ng-show="fineForm.numPreviousViolations.$invalid && fineForm.numPreviousViolations.$touched">رقم
+                            غير مسموح به</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="propertyNumber">رقم المنشأة</label>
+                        <input type="text" name="propertyNumber" ng-model="branchDetail.propertyNumber" class="form-control"
+                            id="propertyNumber" disabled="disabled" placeholder="رقم المنشأة" />
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="restSysMinistry">قيود في نظام الوزارة</label>
+                        <i class="fa fa-asterisk req-error" aria-hidden="true" ng-show="fineForm.restSysMinistry.$error.required"></i>
+                        <input type="text" name="restSysMinistry" ng-model="fine.restSysMinistry" class="form-control"
+                            id="restSysMinistry" placeholder="قيود فى نظام الوزارة..." ng-required="true" />
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="">تفاصيل المخالفة</h4>
+            <hr />
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <div>
+                            <label>الإجراء المتخذ</label>
+                            <i class="fa fa-asterisk req-error" aria-hidden="true" ng-show="fineForm.violationAction.$error.required"></i>
+                        </div>
+                        <label class="radio-btn" ng-repeat="va in violationActions">{{va.violationActionName}}
+                            <input type="radio" name="violationAction" ng-change="resetInput_VioValue()" ng-model="vioActionsOptions.selectedAction"
+                                ng-value="va.violationActionId" ng-required="true">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="vTypeFines">فئة المخالفة</label>
+                        <i class="fa fa-asterisk req-error" aria-hidden="true" ng-show="fineForm.vTypeFines.$error.required"></i>
+                        <select id="vTypeFines" class="form-control" name="vTypeFines" ng-model="selectedViolationType"
+                            ng-change="loadSUB_ViolationsTypes(selectedViolationType)" ng-options="vt.violationType for vt in violationTypes"
+                            ng-required="true">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    <label for="vTypeFinesDetails">فئة المخالفة الفرعية</label>
+                    <i class="fa fa-asterisk req-error" aria-hidden="true" ng-show="fineForm.vTypeFinesDetails.$error.required"></i>
+                    <select id="vTypeFinesDetails" name="vTypeFinesDetails" class="form-control" ng-model="sub_VioTypesOptions.selectedViolationTypeDetails"
+                        ng-options="vtd.violationTypeDetail for vtd in subViolationTypes" ng-required="true">
+                    </select>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="violationDate">تاريخ المخالفة</label>
+                        <i class="fa fa-asterisk req-error" aria-hidden="true" ng-show="fineForm.violationDate.$error.required"></i>
+                        <input type="text" name="violationDate" ng-model="fine.list[0].violationDate" class="form-control"
+                            id="violationDate" placeholder="تاريخ المخالفة..." init-date="fine.dateLicense" datepicker=""
+                            ng-required="true" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="violationDetail">تفاصيل المخالفة</label>
+                        <i class="fa fa-asterisk req-error" aria-hidden="true" ng-show="fineForm.violationDetail.$error.required"></i>
+                        <textarea name="violationDetail" rows="3" ng-model="fine.list[0].violationDetail" class="form-control"
+                            id="violationDetail" placeholder="تفاصيل المخالفة..." ng-required="true"></textarea>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="form-group">
+                        <label for="notes">ملاحظات</label>
+                        <textarea type="text" name="notes" rows="3" ng-model="fine.list[0].notes" class="form-control"
+                            id="notes" placeholder="ملاحظات..."></textarea>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4" ng-hide="vioActionsOptions.selectedAction != 9">
+                    <div class="form-group">
+                        <label for="amount">قيمة المخالفة</label>
+                        <i class="fa fa-asterisk req-error" aria-hidden="true" ng-show="fineForm.amount.$error.required"></i>
+                        <input type="number" min="0" name="amount" ng-model="fine.list[0].amount" class="form-control"
+                            ng-pattern="regex" ng-trim="false" id="amount" placeholder="قيمة المخالفة..." ng-required="vioActionsOptions.selectedAction == 9" />
+                        <span class="req-error f-11" ng-show="fineForm.amount.$invalid && fineForm.amount.$touched">رقم
+                            غير مسموح به</span>
+                    </div>
+                </div>
+            </div>
+
+            <input type="submit" value="إضافة" class="gold-btn" ng-disabled="fineForm.$invalid" />
+        </form>
+
+    </modal>
+
+    <div class="snackbar">تمت الإضافة!</div>
+
+
+    <!-- view fine details modal -->
+    <modal title="عرض التفاصيل" class="" visible="showModalViewFineDetails" data-backdrop="static" data-keyboard="false">
+
+        <h4 class="">تفاصيل الفرع</h4>
+        <hr />
+        <div class="row">
+            <div class="col-12 col-sm-4">
+                <div class="form-group">
+                    <label for="centerNameV">إسم المركز</label>
+                    <input type="text" ng-model="fineByIdData.centerName" class="form-control" id="centerNameV"
+                        disabled="disabled" />
+                </div>
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="form-group">
+                    <label for="referenceNoV">رقم المرجع</label>
+                    <input type="text" ng-model="fineByIdData.referenceNo" class="form-control" id="referenceNoV"
+                        disabled="disabled" />
+                </div>
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="form-group">
+                    <label for="valueBankGuaranteeV">قيمة الضمان المصرفي</label>
+                    <input type="number" ng-model="fineByIdData.valueBankGuarantee" class="form-control" id="valueBankGuaranteeV"
+                        disabled="disabled" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-sm-4">
+                <div class="form-group">
+                    <label for="emirateNameV">الإمارة</label>
+                    <input type="text" ng-model="fineByIdData.emirateName" class="form-control" id="emirateNameV"
+                        disabled="disabled" />
+                </div>
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="form-group">
+                    <label for="dateLicenseV">تاريخ الترخيص</label>
+                    <input type="text" ng-model="fineByIdData.dateLicense" class="form-control" id="dateLicenseV"
+                        disabled="disabled" />
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-4">
+                <div class="form-group">
+                    <label for="tradeLicenseExpDateV">انتهاء الرخصة التجارية</label>
+                    <input type="text" ng-model="fineByIdData.tradeLicenseExpDate" class="form-control" id="tradeLicenseExpDateV"
+                        disabled="disabled" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-sm-4">
+                <div class="form-group">
+                    <label for="ownerNameV">إسم مالك المركز</label>
+                    <input type="text" ng-model="fineByIdData.centerOwnerName" class="form-control" id="ownerNameV"
+                        disabled="disabled" />
+                </div>
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="form-group">
+                    <label for="unpaidChargesV">مخالفات غير مدفوعة</label>
+                    <input type="text" ng-model="fineByIdData.unpaidCharges" class="form-control" id="unpaidChargesV"
+                        disabled="disabled" />
+                </div>
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="form-group">
+                    <label for="numPreviousViolationsV">عدد المخالفات السابقة</label>
+                    <input type="number" ng-model="fineByIdData.numPreviousViolations" class="form-control" id="numPreviousViolationsV"
+                        disabled="disabled" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-4">
+                        <div class="form-group">
+                            <label for="propertyNumberV">رقم المنشأة</label>
+                            <input type="text" ng-model="fineByIdData.propertyNumber" class="form-control" id="propertyNumberV"
+                                disabled="disabled" />
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <div class="form-group">
+                            <label for="restSysMinistryV">قيود في نظام الوزارة</label>
+                            <input type="text" ng-model="fineByIdData.restSysMinistry" class="form-control" id="restSysMinistryV"
+                                disabled="disabled" />
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="">تفاصيل المخالفة</h4>
+                <hr />
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div>
+                                <label>الإجراء المتخذ</label>
+                            </div>
+                            <label class="radio-btn">{{fineDetailsByIdData.violationActionDetail}}
+                                <input type="radio" name="{{fineDetailsByIdData.violationAction}}" checked="checked"
+                                    ng-value="fineDetailsByIdData.violationAction" disabled="disabled">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4">
+                        <div class="form-group">
+                            <label for="vTypeFinesV">فئة المخالفة</label>
+                            <input type="text" ng-model="fineDetailsByIdData.violationTypeMaster" class="form-control" id="vTypeFinesV"
+                                disabled="disabled" />
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <div class="form-group">
+                            <label for="vTypeFinesDetailsV">فئة المخالفة الفرعية</label>
+                            <input type="text" ng-model="fineDetailsByIdData.violationTypeDetail" class="form-control"
+                                id="vTypeFinesDetailsV" disabled="disabled" />
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <div class="form-group">
+                            <label for="violationDateV">تاريخ المخالفة</label>
+                            <input type="text" ng-model="fineDetailsByIdData.violationDate" class="form-control" id="violationDateV"
+                                disabled="disabled" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4">
+                        <div class="form-group">
+                            <label for="violationDetailV">تفاصيل المخالفة</label>
+                            <textarea rows="3" ng-model="fineDetailsByIdData.violationDetail" class="form-control" id="violationDetailV"
+                                disabled="disabled"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <div class="form-group">
+                            <label for="notesV">ملاحظات</label>
+                            <textarea rows="3" ng-model="fineDetailsByIdData.notes" class="form-control" id="notesV"
+                                disabled="disabled"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4" ng-hide="fineDetailsByIdData.violationAction != 9">
+                        <div class="form-group">
+                            <label for="amountV">قيمة المخالفة</label>
+                            <input type="text" ng-model="fineDetailsByIdData.amount" class="form-control" id="amountV"
+                                disabled="disabled" />
+                        </div>
+                    </div>
+                </div>
+
+
+    </modal>
+
+
+
+</section>

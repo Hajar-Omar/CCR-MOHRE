@@ -1,0 +1,152 @@
+<section class="main inner" data-controller="notificationsCtrl">
+
+    <div class="d-flex">
+        <div><a href="#"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></div>
+        <div>
+           <a href="" class="btn-icon mr-5" ng-click="toggleModalEmail()">edit template <i class="fa fa-envelope-open-o"
+                    aria-hidden="true"></i></a>
+            <a href="" class="btn-icon" ng-click="toggleModalConfig()">settings<i class="fa fa-cog" aria-hidden="true"></i></a>
+
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-heading d-flex">
+            <h3>search</h3>
+            <div class="collapse-icon">
+                <i class="fa fa-caret-up" aria-hidden="true"></i>
+            </div>
+        </div>
+        <div class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                <label class="radio-btn">all
+                    <input type="radio" name="violation" ng-model="vioOptions.selectedViolation" ng-value="0">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="radio-btn" ng-repeat="v in violations">{{v.violationType}}
+                    <input type="radio" name="violation" ng-model="vioOptions.selectedViolation" ng-value="v.violationCode">
+                    <span class="checkmark"></span>
+                </label>
+
+                <div class="row mt-20">
+                    <div class="col-xs-12 col-md-4">
+                        <label for="fromdatVio">From</label>
+                        <div id="fromdatVio" class="input-group date">
+                            <input type="text" class="form-control" placeholder="From" ng-model="notiFromDate" init-date="notiFromDate" datepicker="">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <label for="todatVio">To</label>
+                        <div id="todatVio" class="input-group date">
+                            <input type="text" class="form-control" placeholder="To" ng-model="notiToDate" init-date="notiToDate" datepicker="">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4 mt-40">
+                        <a href="" class="gold-btn w-50 mr-10" ng-click="searchNotifications($event)">search</a>
+                        <a href="" class="white-btn w-50" ng-click="resetDeafult($event)">clear</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="table-vertical-scroll" class="slideTable" custom-scroll="minimal-dark">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <th colspan="2">Center Code</th>
+                    <th>Center Name</th>
+                    <th colspan="2">Violation Type</th>
+                    <th>Number of violations</th>
+                    <!-- <th>Was Fined</th> -->
+                    <!-- <th>Actions</th> -->
+                </thead>
+                <tbody ng-repeat="n in allNotifications.data" class="active">
+                    <tr>
+                        <td data-center="{{n.centerCode}}" data-emirate="{{n.centerCode | limitTo:3}}" data-vioType="{{n.violationCode}}" colspan="2">
+                            <a href="" class="expand-btn" ng-click="loadNotificatinDetails($event)"><i class="fa fa-plus-circle"
+                                    aria-hidden="true"></i></a>
+                            <span class="centerCode">{{n.centerCode}}</span>
+                        </td>
+                        <td>{{n.centerName}}</td>
+                        <td colspan="2">{{n.violationType}}</td>
+                        <td>{{n.numberViolations}}</td>
+                        <!-- <td><i class="fa fa-check success" aria-hidden="true"></i></td> -->
+                        <!-- <td>
+                            <a href="#" class="light-btn">Fine</a>
+                            <a href="#" class="light-btn">Warning</a>
+                        </td> -->
+                    </tr>
+
+                    <tr ng-repeat="nd in allNotificationDetails.data">
+                        <td>{{$index + 1}}</td>
+                        <td>{{nd.violationType}}</td>
+                        <!-- <td>{{nd.violationTime}}</td> -->
+                        <td>{{nd.violationTime}} min</td>
+                        <td>Sent to: {{nd.sentTo}}</td>
+                        <td>{{nd.statusName}}</td>
+                        <td>Date: {{nd.createDate | limitTo:10}} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="loading" ng-show="loading || loadingDetails">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+        </div>
+        <div class="feedback-messages" ng-show="allNotifications.empty || allNotifications.error" ng-class="{error: allNotifications.error}">
+            <span class="empty" ng-show="allNotifications.empty">No Data Found!</span>
+            <span ng-show="allNotifications.error">Internal Server Error!</span>
+        </div>
+        <!-- <div class="feedback-messages" ng-show="allNotificationDetails.empty || allNotificationDetails.error" ng-class="{error: allNotificationDetails.error}">
+            <span class="empty" ng-show="allNotificationDetails.empty">No Data Found!</span>
+            <span ng-show="allNotificationDetails.error">Internal Server Error!</span>
+        </div> -->
+    </div>
+
+
+
+    <!-- <div ng-include src="'/editMailModal.html'"></div> -->
+    <modal title="EMAIL" visible="showModalEmail">
+        <div class="form-group">
+            <label for="vType">Violation Type</label>
+            <select id="vType" class="form-control" ng-model="selectedViolationType" ng-change="changedViolationValue(selectedViolationType)"
+                ng-options="v.violationType for v in violations">
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="emailSubj">{{emailTemplateSubject.label}}</label>
+            <input type="text" ng-model="emailTemplateSubject.value" name="{{emailTemplateSubject.key}}" ng-value="emailTemplateSubject.value"
+                class="form-control" id="emailSubj" />
+        </div>
+        <div class="form-group">
+            <label for="emailBody">{{emailTemplateBody.label}}</label>
+            <textarea class="EmailBody" name="{{emailTemplateBody.key}}" id="emailBody"></textarea>
+        </div>
+        <a href="" class="gold-btn" ng-click="saveEmailTemplate()">save</a>
+    </modal>
+
+
+    <modal title="SMTP Configuration" class="email-config" visible="showModalConfig">
+        <div class="form-group" ng-repeat="c in emailConfig">
+            <label for="input{{$index}}">{{c.label}}</label>
+            <input type="{{c.type}}" name="{{c.key}}" ng-model="c.value" ng-value="c.value" class="form-control" id="input{{$index}}"
+                placeholder="Enter {{c.label}} ..." />
+        </div>
+        <a href="" class="gold-btn" ng-click="saveEmailConfig()">save</a>
+    </modal>
+
+    <div class="snackbar">Saved!</div>
+
+</section>
